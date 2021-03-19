@@ -1,4 +1,4 @@
-autoupdate.yamlname: Auto update on base branch change
+name: Auto update on base branch change
 on:
   push:
     branches:
