@@ -1,0 +1,17 @@
+name: ManagePRReviewers
+
+on:
+  pull_request_review:
+env:
+  GITHUB_PR_NUMBER: ${{github.event.pull_request.number}}
+  
+jobs:
+  Manage-PRReviewers:
+    runs-on: ubuntu-latest
+    
+    steps:
+      
+      - name: Extract branch name
+        run: |
+              echo "PR_Branch_Name=${{ github.head_ref }}" >> $GITHUB_ENV  
+              echo 'Event name:' ${{ github.event_name }}
