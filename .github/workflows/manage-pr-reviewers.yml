@@ -20,6 +20,8 @@ jobs:
       - name: Extract branch name
         run: |
               echo 'Event name:' ${{ github.event_name }}
-              length=$(github.event.pull_request.requested_reviewers | jq '. | length')
-              echo 'count is:' $length
-   
+              length=$(echo $requested_reviewers | jq '. | length')
+              echo "length = $length"
+        env:
+          requested_reviewers: ${{ toJson(github.event.pull_request.requested_reviewers) }}
+
