@@ -19,5 +19,7 @@ jobs:
               
       - name: Extract branch name
         run: |
-              echo "PR_Branch_Name=${{ github.head_ref }}" >> $GITHUB_ENV  
               echo 'Event name:' ${{ github.event_name }}
+              length=$(github.event.pull_request.requested_reviewers | jq '. | length')
+              echo 'count is:' $length
+   
