@@ -34,7 +34,7 @@ jobs:
                 
                 echo $restApiPRTitle
                 
-                if [[ $restApiPRTitle =~ ^\[DT-[0-9]+\] ]]; then
+                #if [[ $restApiPRTitle =~ ^\[DT-[0-9]+\] ]]; then
                   #if the title matches the pattern
                   echo 'PR Title is in correct format.'
                   
@@ -43,10 +43,10 @@ jobs:
                   jira_id=${jira_id:1}
                   echo "JiraId=$jira_id" >> $GITHUB_ENV
                   
-                else
-                  echo 'PR Title does not comply with the required pattern.'                  
-                  exit 1
-                fi
+                #else
+                #  echo 'PR Title does not comply with the required pattern.'                  
+                #  exit 1
+                #fi
                      
       
       - name: Read version from Jira Issue
