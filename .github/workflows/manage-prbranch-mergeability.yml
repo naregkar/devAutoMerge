@@ -1,10 +1,11 @@
 name: ManagePrBranchMergeability
 
 on:
-    push:
+    #push:
     pull_request:
         types:
             - edited
+            - synchronize
 #     #types: [opened, edited, reopened, synchronize]
 #     types:
 #       - assigned 
