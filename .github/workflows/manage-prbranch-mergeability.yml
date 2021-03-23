@@ -3,7 +3,20 @@ name: ManagePrBranchMergeability
 on:
   pull_request:
     #types: [opened, edited, reopened, synchronize]
-    types: [assigned, assigned, labeled, unlabeled, opened, edited, closed, reopened, synchronize, ready_for_review, locked, unlocked, review_requested, review_request_removed]
+    types:
+      - assigned 
+      - labeled 
+      - unlabeled
+      - opened
+      - edited 
+      - closed
+      - reopened
+      - synchronize
+      - ready_for_review
+      - locked
+      - unlocked
+      - review_requested
+      - review_request_removed
     #branches: 
     #  - master
   #push:
