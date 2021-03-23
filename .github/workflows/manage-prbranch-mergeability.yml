@@ -1,25 +1,25 @@
 name: ManagePrBranchMergeability
 
-on:
-  pull_request:
-    #types: [opened, edited, reopened, synchronize]
-    types:
-      - assigned 
-      - labeled 
-      - unlabeled
-      - opened
-      - edited 
-      - closed
-      - reopened
-      - synchronize
-      - ready_for_review
-      - locked
-      - unlocked
-      - review_requested
-      - review_request_removed
+on: push
+#   pull_request:
+#     #types: [opened, edited, reopened, synchronize]
+#     types:
+#       - assigned 
+#       - labeled 
+#       - unlabeled
+#       - opened
+#       - edited 
+#       - closed
+#       - reopened
+#       - synchronize
+#       - ready_for_review
+#       - locked
+#       - unlocked
+#       - review_requested
+#       - review_request_removed
     #branches: 
     #  - master
-  push:
+
 env:
   GITHUB_PR_NUMBER: ${{github.event.pull_request.number}}
   GITHUB_WORKFLOW_ID: ${{github.run_id}}
