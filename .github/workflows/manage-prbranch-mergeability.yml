@@ -2,10 +2,10 @@ name: ManagePrBranchMergeability
 
 on:
   pull_request:
-    types: [opened, edited, reopened, synchronize]
-    branches: 
-      - master
-  push:
+    #types: [opened, edited, reopened, synchronize]
+    #branches: 
+    #  - master
+  #push:
 env:
   GITHUB_PR_NUMBER: ${{github.event.pull_request.number}}
   GITHUB_WORKFLOW_ID: ${{github.run_id}}
