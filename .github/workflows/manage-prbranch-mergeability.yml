@@ -20,7 +20,7 @@ on:
       - review_request_removed
     #branches: 
     #  - master
-  #push:
+  push:
 env:
   GITHUB_PR_NUMBER: ${{github.event.pull_request.number}}
   GITHUB_WORKFLOW_ID: ${{github.run_id}}
