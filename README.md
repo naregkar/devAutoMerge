@@ -1,2 +1,3 @@
 # devAutoMerge
 test
+hello
