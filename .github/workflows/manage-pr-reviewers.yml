@@ -2,6 +2,8 @@ name: ManagePRReviewers
 
 on:
   pull_request_review:
+    types:
+      - 'submitted'
 env:
   GITHUB_PR_NUMBER: ${{github.event.pull_request.number}}
   
@@ -17,7 +19,13 @@ jobs:
               echo 'Event name:' ${{ github.event_name }}
               
               
-      - name: Extract branch name
-        run: |
-              echo toJson(github.event.pull_request.requested_reviewers)
+      - name: Execute tool for PR reviewers
+        id: 'prreviewtool'
+        uses: 'jrylan/github-action-reviews-counter@main'
+        with:
+          repo-token: '${{ secrets.TOKEN_GITHUB }}'
+          
+      - name: Assess PR Reviewers Count
+        run:  |
+                echo 'count is' ${{ steps.prreviewtool.outputs.approved }}
 
