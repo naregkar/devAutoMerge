@@ -2,6 +2,7 @@ name: ManagePRReviewers
 
 on:
   pull_request_review:
+  workflow_dispatch:
 env:
   GITHUB_PR_NUMBER: ${{github.event.pull_request.number}}
   
