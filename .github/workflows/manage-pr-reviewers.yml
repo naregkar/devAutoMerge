@@ -17,7 +17,9 @@ jobs:
               echo 'Event name:' ${{ github.event_name }}
               
               
-      - name: Extract branch name
+      - name: get the count of requested reviewers
         run: |
-              echo toJson(${{ github.event.pull_request.requested_reviewers }})
-
+              length=$(echo $requested_reviewers | jq '. | length')
+              echo "length = $length"
+        env:
+          requested_reviewers: ${{ toJson(github.event.pull_request.requested_reviewers) }}
