@@ -1,3 +1,6 @@
 # devAutoMerge
 test
 hello
+
+
+hi
