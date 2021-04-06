@@ -74,14 +74,17 @@ jobs:
         run: |
                 if [[ "$issue_type" == "Story" ]] || [[ "$issue_type" == "Bug" ]] || [[ "$issue_type" == "Task" ]]; then
                     echo 'Story or bug or task.'
+                          
+                    restApiGETParentStatus=$(curl --request GET \
+                        --url 'https://naregkar.atlassian.net/rest/api/3/issue/${{ env.JiraId }}/' \
+                        --user 'nareg.karamanoukian@picsart.com:oBJTrxuI3qf0Do1MBpGbBE87' \
+                        --header 'Accept: application/json' | jq -r '.fields.status.name')
+                        
+                        toMergeStatus="Ready to Merge"
+                        echo $restApiGETParentStatus
                     
-                    curl -D- -u nareg.karamanoukian@picsart.com:oBJTrxuI3qf0Do1MBpGbBE87 \
-                        -X PUT --data '{ "fields": { "customfield_10029" : "'"$GITHUB_WORKFLOW_ID"'" }}' \
-                        -H "Content-Type: application/json" https://naregkar.atlassian.net/rest/api/3/issue/${{ env.JiraId }}
-               
-                    toMergeStatus="Ready to Merge"
-               
-                    if [[ "${{ env.JiraIssue_Status }}" == "$toMergeStatus" ]]; then
+
+                    if [[ "$restApiGETParentStatus" == "$toMergeStatus" ]]; then
                         echo "PR can be merged to master"
                     else
                         echo "Jira Issue's status is not Ready to Merge. Cannot Merge to master."
