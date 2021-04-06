@@ -91,14 +91,15 @@ jobs:
                 else
                     echo 'The Issue is a sub-task.'
                     
-                    restApiGET=$(curl --request GET \
+                    restApiGETParentStatus=$(curl --request GET \
                         --url 'https://naregkar.atlassian.net/rest/api/3/issue/${{ env.JiraId }}/' \
                         --user 'nareg.karamanoukian@picsart.com:oBJTrxuI3qf0Do1MBpGbBE87' \
                         --header 'Accept: application/json' | jq -r '.fields.parent.fields.status.name')
                         
                         toMergeStatus="Ready to Merge"
+                        echo $restApiGETParentStatus
                
-                    if [[ "${{ env.JiraIssue_Status }}" == "$toMergeStatus" ]]; then
+                    if [[ "$restApiGETParentStatus" == "$toMergeStatus" ]]; then
                         echo "PR can be merged to master"
                     else
                         echo "Issue's parent status is not Ready to Merge. Cannot Merge to master."
