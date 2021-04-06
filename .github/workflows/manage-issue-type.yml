@@ -59,20 +59,51 @@ jobs:
                echo "issue_type=$restApiGET" >> $GITHUB_ENV           
           
           
-      - name: Assess the Jira Issue type
+      - name: Save GitHub info in Jira Issue item
         if: github.event_name == 'pull_request'
         run: |
-              echo 'issue type is:' $issue_type
+                echo 'issue type is:' $issue_type
               
-              #save the repo name
-              curl -D- -u nareg.karamanoukian@picsart.com:oBJTrxuI3qf0Do1MBpGbBE87 \
-                -X PUT --data '{ "fields": { "customfield_10033" : "'"$GITHUB_REPOSITORY_NAME"'" }}' \
-                -H "Content-Type: application/json" https://naregkar.atlassian.net/rest/api/3/issue/${{ env.JiraId }}
-              
-              
-              if [[ "$issue_type" == "Story" ]] || [[ "$issue_type" == "Bug" ]] || [[ "$issue_type" == "Task" ]]; then
-                echo 'Story or bug or task.'
-              else
-                echo 'The Issue is a sub-task.'
-              fi                   
+                #save the repo name and GitHub workflow id
+                curl -D- -u nareg.karamanoukian@picsart.com:oBJTrxuI3qf0Do1MBpGbBE87 \
+                    -X PUT --data '{ "fields": { "customfield_10033" : "'"$GITHUB_REPOSITORY_NAME"'", "customfield_10029" : "'"$GITHUB_WORKFLOW_ID"'"  }}' \
+                    -H "Content-Type: application/json" https://naregkar.atlassian.net/rest/api/3/issue/${{ env.JiraId }}
+        
+        
+      - name: Assess Jira Status
+        run: |
+                if [[ "$issue_type" == "Story" ]] || [[ "$issue_type" == "Bug" ]] || [[ "$issue_type" == "Task" ]]; then
+                    echo 'Story or bug or task.'
+                    
+                    curl -D- -u nareg.karamanoukian@picsart.com:oBJTrxuI3qf0Do1MBpGbBE87 \
+                        -X PUT --data '{ "fields": { "customfield_10029" : "'"$GITHUB_WORKFLOW_ID"'" }}' \
+                        -H "Content-Type: application/json" https://naregkar.atlassian.net/rest/api/3/issue/${{ env.JiraId }}
+               
+                    toMergeStatus="Ready to Merge"
+               
+                    if [[ "${{ env.JiraIssue_Status }}" == "$toMergeStatus" ]]; then
+                        echo "PR can be merged to master"
+                    else
+                        echo "Jira Issue's status is not Ready to Merge. Cannot Merge to master."
+                    exit 1
+                    fi
+                    
+                else
+                    echo 'The Issue is a sub-task.'
+                    
+                    restApiGET=$(curl --request GET \
+                        --url 'https://naregkar.atlassian.net/rest/api/3/issue/${{ env.JiraId }}/' \
+                        --user 'nareg.karamanoukian@picsart.com:oBJTrxuI3qf0Do1MBpGbBE87' \
+                        --header 'Accept: application/json' | jq -r '.fields.parent.fields.status.name')
+                        
+                        toMergeStatus="Ready to Merge"
+               
+                    if [[ "${{ env.JiraIssue_Status }}" == "$toMergeStatus" ]]; then
+                        echo "PR can be merged to master"
+                    else
+                        echo "Issue's parent status is not Ready to Merge. Cannot Merge to master."
+                        exit 1
+                    fi
+                        
+                fi                   
       
