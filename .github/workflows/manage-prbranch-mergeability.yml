@@ -111,10 +111,6 @@ jobs:
         run: |
                echo 'status:' ${{ env.JiraStatus }}
                
-               curl -D- -u nareg.karamanoukian@picsart.com:oBJTrxuI3qf0Do1MBpGbBE87 \
-                   -X PUT --data '{ "fields": { "customfield_10029" : "'"$GITHUB_WORKFLOW_ID"'" }}' \
-                   -H "Content-Type: application/json" https://naregkar.atlassian.net/rest/api/3/issue/${{ env.JiraId }}
-               
                toMergeStatus="Ready to Merge"
                
                if [[ "${{ env.JiraStatus }}" == "$toMergeStatus" ]]; then
