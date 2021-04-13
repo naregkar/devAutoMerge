@@ -57,20 +57,27 @@ jobs:
                   --user 'nareg.karamanoukian@picsart.com:oBJTrxuI3qf0Do1MBpGbBE87' \
                   --header 'Accept: application/json');        
                
-               jira_Issue_Type=$(echo $restApiGETJiraIssueDetails | jq -r '.fields.issuetype.name')
-               jira_PR_Version=$(echo $restApiGETJiraIssueDetails | jq -r '.fields.fixVersions[].name')
+               jira_Issue_Type=$(echo $restApiGETJiraIssueDetails | jq -r '.fields.issuetype.name')           
                
                echo "JiraIssueType=$jira_Issue_Type" >> $GITHUB_ENV
-               echo "JiraPRVersion=$jira_PR_Version" >> $GITHUB_ENV
+               
                
                if [[ "$jira_Issue_Type" == "Story" ]] || [[ "$jira_Issue_Type" == "Bug" ]] || [[ "$jira_Issue_Type" == "Task" ]]; then                
                     jira_Issue_Status=$(echo $restApiGETJiraIssueDetails | jq -r '.fields.status.name')
+                    jira_PR_Version=$(echo $restApiGETJiraIssueDetails | jq -r '.fields.fixVersions[].name')
                else
                     jira_Issue_Status=$(echo $restApiGETJiraIssueDetails | jq -r '.fields.parent.fields.status.name')
+                
+                    jira_Issue_ParentId=$(echo $restApiGETJiraIssueDetails | jq -r '.fields.parent.key')
+                    
+                    jira_PR_Version=$(curl --request GET \
+                      --url 'https://naregkar.atlassian.net/rest/api/3/issue/$jira_Issue_ParentId/' \
+                      --user 'nareg.karamanoukian@picsart.com:oBJTrxuI3qf0Do1MBpGbBE87' \
+                      --header 'Accept: application/json' | jq - r '.fields.fixVersions[].name');
                fi
                
                echo "JiraStatus=$jira_Issue_Status" >> $GITHUB_ENV               
-               
+               echo "JiraPRVersion=$jira_PR_Version" >> $GITHUB_ENV
               
       - name: Read the version file from the master branch
         if: github.event_name == 'pull_request'
