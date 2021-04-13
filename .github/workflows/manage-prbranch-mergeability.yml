@@ -67,15 +67,17 @@ jobs:
                     jira_PR_Version=$(echo $restApiGETJiraIssueDetails | jq -r '.fields.fixVersions[].name')
                else
                     jira_Issue_Status=$(echo $restApiGETJiraIssueDetails | jq -r '.fields.parent.fields.status.name')
-                
-                    jira_Issue_ParentId=$(echo $restApiGETJiraIssueDetails | jq -r '.fields.parent.key')
+                    echo 'jira_Issue_Status:' $jira_Issue_Status
                     
+                    jira_Issue_ParentId=$(echo $restApiGETJiraIssueDetails | jq -r '.fields.parent.key')
                     echo 'jira_Issue_ParentId:' $jira_Issue_ParentId
                     
                     jira_PR_Version=$(curl --request GET \
-                      --url 'https://naregkar.atlassian.net/rest/api/3/issue/"$jira_Issue_ParentId"/' \
+                      --url 'https://naregkar.atlassian.net/rest/api/3/issue/DT-50/' \
                       --user 'nareg.karamanoukian@picsart.com:oBJTrxuI3qf0Do1MBpGbBE87' \
                       --header 'Accept: application/json');
+                      
+                    echo 'jira_PR_Version:' $jira_PR_Version
                fi
                
                echo "JiraStatus=$jira_Issue_Status" >> $GITHUB_ENV               
