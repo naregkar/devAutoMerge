@@ -73,7 +73,7 @@ jobs:
                     echo 'jira_Issue_ParentId:' $jira_Issue_ParentId
                     
                     jira_PR_Version=$(curl --request GET \
-                      --url 'https://naregkar.atlassian.net/rest/api/3/issue/$jira_Issue_ParentId/' \
+                      --url 'https://naregkar.atlassian.net/rest/api/3/issue/${jira_Issue_ParentId}/' \
                       --user 'nareg.karamanoukian@picsart.com:oBJTrxuI3qf0Do1MBpGbBE87' \
                       --header 'Accept: application/json' | jq - r '.fields.fixVersions[].name');
                fi
