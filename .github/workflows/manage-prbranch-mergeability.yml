@@ -79,6 +79,11 @@ jobs:
                     echo 'jira_PR_Version:' $jira_PR_Version
                fi
                
+               if [[ -z ${jira_PR_Version} ]]; then
+                    echo 'No version specified in Jira Issue'
+                    exit 1
+               fi
+               
                echo "JiraStatus=$jira_Issue_Status" >> $GITHUB_ENV               
                echo "JiraPRVersion=$jira_PR_Version" >> $GITHUB_ENV
               
