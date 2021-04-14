@@ -98,6 +98,11 @@ jobs:
                     
                fi
                
+               if [[ ${jira_Issue_Status} == "Done" ]]; then
+                    echo 'You cannot associate this PR to a closed Jira Issue.'
+                    exit 1
+               fi
+               
                if [[ -z ${jira_PR_Version} ]]; then
                     echo 'No version specified in Jira Issue.'
                     exit 1
