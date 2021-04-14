@@ -84,14 +84,14 @@ jobs:
                       --user 'nareg.karamanoukian@picsart.com:oBJTrxuI3qf0Do1MBpGbBE87' \
                       --header 'Accept: application/json');
                       
-                    fixedVersionCount=$(echo $restApiGETJiraIssueDetails | jq -r '.fields.fixVersions' | jq length)
+                    fixedVersionCount=$(echo $restApiGETJiraParentIssueDetails | jq -r '.fields.fixVersions' | jq length)
                     
                     if [[ "$fixedVersionCount" -gt 1 ]]; then
                         echo 'There are two versions assigned for this Jira Issue's Parent. Set one version.'
                         exit 1
                     fi
                     
-                    jira_PR_Version=$(echo $restApiGETJiraIssueDetails | jq -r '.fields.fixVersions[].name')
+                    jira_PR_Version=$(echo $restApiGETJiraParentIssueDetails | jq -r '.fields.fixVersions[].name')
                       
                     echo 'jira_PR_Version:' $jira_PR_Version
                fi
