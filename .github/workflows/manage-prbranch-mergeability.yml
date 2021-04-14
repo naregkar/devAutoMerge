@@ -63,6 +63,14 @@ jobs:
                
                if [[ "$jira_Issue_Type" == "Story" ]] || [[ "$jira_Issue_Type" == "Bug" ]] || [[ "$jira_Issue_Type" == "Task" ]]; then                
                     jira_Issue_Status=$(echo $restApiGETJiraIssueDetails | jq -r '.fields.status.name')
+                    
+                    fixedVersionCount=$(echo $restApiGETJiraIssueDetails | jq -r '.fields.fixVersions' | jq length)
+                    
+                    if [[ "$fixedVersionCount" -gt 1 ]]; then
+                        echo 'There are two versions assigned for this Jira Issue. Set one version.'
+                        exit 1
+                    fi
+                    
                     jira_PR_Version=$(echo $restApiGETJiraIssueDetails | jq -r '.fields.fixVersions[].name')
                else
                     jira_Issue_Status=$(echo $restApiGETJiraIssueDetails | jq -r '.fields.parent.fields.status.name')
