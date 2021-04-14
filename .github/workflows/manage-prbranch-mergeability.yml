@@ -79,21 +79,7 @@ jobs:
                     jira_Issue_ParentId=$(echo $restApiGETJiraIssueDetails | jq -r '.fields.parent.key')
                     echo 'jira_Issue_ParentId:' $jira_Issue_ParentId
                     
-                    restApiGETJiraParentIssueDetails=$(curl --request GET \
-                      --url 'https://naregkar.atlassian.net/rest/api/3/issue/'$jira_Issue_ParentId'/' \
-                      --user 'nareg.karamanoukian@picsart.com:oBJTrxuI3qf0Do1MBpGbBE87' \
-                      --header 'Accept: application/json');
-                      
-                    fixedVersionCount=$(echo $restApiGETJiraParentIssueDetails | jq -r '.fields.fixVersions' | jq length)
                     
-                    if [[ "$fixedVersionCount" -gt 1 ]]; then
-                        echo 'There are two versions assigned for this Jira Issue's Parent. Set one version.'
-                        exit 1
-                    fi
-                    
-                    jira_PR_Version=$(echo $restApiGETJiraParentIssueDetails | jq -r '.fields.fixVersions[].name')
-                      
-                    echo 'jira_PR_Version:' $jira_PR_Version
                fi
                
                if [[ -z ${jira_PR_Version} ]]; then
