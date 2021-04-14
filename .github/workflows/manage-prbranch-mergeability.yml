@@ -93,6 +93,9 @@ jobs:
                         exit 1
                     fi
                     
+                    jira_PR_Version=$(echo $restApiGETJiraParentIssueDetails | jq -r '.fields.fixVersions[].name')
+                      
+                    echo 'jira_PR_Version:' $jira_PR_Version
                     
                fi
                
