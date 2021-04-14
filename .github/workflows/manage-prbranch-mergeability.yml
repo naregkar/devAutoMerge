@@ -60,7 +60,6 @@ jobs:
                
                echo "JiraIssueType=$jira_Issue_Type" >> $GITHUB_ENV
                
-               
                if [[ "$jira_Issue_Type" == "Story" ]] || [[ "$jira_Issue_Type" == "Bug" ]] || [[ "$jira_Issue_Type" == "Task" ]]; then                
                     jira_Issue_Status=$(echo $restApiGETJiraIssueDetails | jq -r '.fields.status.name')
                     
@@ -73,12 +72,14 @@ jobs:
                     
                     jira_PR_Version=$(echo $restApiGETJiraIssueDetails | jq -r '.fields.fixVersions[].name')
                else
-                    jira_Issue_Status=$(echo $restApiGETJiraIssueDetails | jq -r '.fields.parent.fields.status.name')
-                    echo 'jira_Issue_Status:' $jira_Issue_Status
+                    #in case the PR is linked to a sub-task
                     
                     jira_Issue_ParentId=$(echo $restApiGETJiraIssueDetails | jq -r '.fields.parent.key')
-                    echo 'jira_Issue_ParentId:' $jira_Issue_ParentId
-                    
+                    echo 'Parent ID:' $jira_Issue_ParentId    
+                        
+                    jira_Issue_Status=$(echo $restApiGETJiraIssueDetails | jq -r '.fields.parent.fields.status.name')
+                    echo 'Parent Status:' $jira_Issue_Status
+                                                           
                     restApiGETJiraParentIssueDetails=$(curl --request GET \
                       --url 'https://naregkar.atlassian.net/rest/api/3/issue/'$jira_Issue_ParentId'/' \
                       --user 'nareg.karamanoukian@picsart.com:oBJTrxuI3qf0Do1MBpGbBE87' \
@@ -86,16 +87,14 @@ jobs:
                       
                     fixedVersionCount=$(echo $restApiGETJiraParentIssueDetails | jq -r '.fields.fixVersions' | jq length)
                     
-                    echo 'fixedVersionCount:' $fixedVersionCount
-                    
                     if [[ "$fixedVersionCount" -gt 1 ]]; then
-                        echo 'There are two versions assigned to the parent for this Jira Issue. Set one version.'
+                        echo 'There are two versions assigned to the parent of this Jira Issue. Set one version.'
                         exit 1
                     fi
                     
                     jira_PR_Version=$(echo $restApiGETJiraParentIssueDetails | jq -r '.fields.fixVersions[].name')
                       
-                    echo 'jira_PR_Version:' $jira_PR_Version
+                    echo 'Fixed Version assigned for the parent is:' $jira_PR_Version
                     
                fi
                
@@ -121,12 +120,12 @@ jobs:
         if: github.event_name == 'pull_request'
         run: |
               echo 'pr version is:' $JiraPRVersion
-              echo 'master version is:' $MasterVersion
+              echo 'Master branch version is:' $MasterVersion
               
               if [[ "$JiraPRVersion" == "$MasterVersion" ]]; then
                 echo 'Matching PR and master versions.'
               else
-                echo 'PR branch planned for a future release. Cannot merge now.'
+                echo 'PR branch planned for a future release: ("$JiraPRVersion"). Cannot merge now.'
                 exit 1
               fi
       
