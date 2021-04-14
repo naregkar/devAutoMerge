@@ -125,7 +125,7 @@ jobs:
               if [[ "$JiraPRVersion" == "$MasterVersion" ]]; then
                 echo 'Matching PR and master versions.'
               else
-                echo 'PR branch planned for a future release:'$JiraPRVersion'). Cannot merge now.'
+                echo 'PR branch planned for a future release: '$JiraPRVersion'. Cannot merge now.'
                 exit 1
               fi
       
