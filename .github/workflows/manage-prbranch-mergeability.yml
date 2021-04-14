@@ -88,6 +88,11 @@ jobs:
                     
                     echo 'fixedVersionCount:' $fixedVersionCount
                     
+                    if [[ "$fixedVersionCount" -gt 1 ]]; then
+                        echo 'There are two versions assigned to the parent for this Jira Issue. Set one version.'
+                        exit 1
+                    fi
+                    
                     
                fi
                
