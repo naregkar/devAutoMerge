@@ -119,13 +119,13 @@ jobs:
       - name: Compare values and assess the mergeability based on the version files
         if: github.event_name == 'pull_request'
         run: |
-              echo 'pr version is:' $JiraPRVersion
-              echo 'Master branch version is:' $MasterVersion
+              echo 'PR branch version is set to:' $JiraPRVersion
+              echo 'Master branch version is set to:' $MasterVersion
               
               if [[ "$JiraPRVersion" == "$MasterVersion" ]]; then
                 echo 'Matching PR and master versions.'
               else
-                echo 'PR branch planned for a future release: ("$JiraPRVersion"). Cannot merge now.'
+                echo 'PR branch planned for a future release: (' $JiraPRVersion '). Cannot merge now.'
                 exit 1
               fi
       
