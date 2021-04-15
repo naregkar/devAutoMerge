@@ -3,26 +3,12 @@ name: ManagePrBranchMergeability
 on:
     pull_request:
         types: [opened, edited, reopened, synchronize]
-     
-#     types:
-#       - assigned 
-#       - labeled 
-#       - unlabeled
-#       - opened
-#       - edited 
-#       - closed
-#       - reopened
-#       - synchronize
-#       - ready_for_review
-#       - locked
-#       - unlocked
-#       - review_requested
-#       - review_request_removed
-    #branches: 
-    #  - master
+        branches: 
+          - master
 env:
-  GITHUB_PR_NUMBER: ${{github.event.pull_request.number}}
-  GITHUB_WORKFLOW_ID: ${{github.run_id}}
+  GITHUB_PR_NUMBER: ${{ github.event.pull_request.number }}
+  GITHUB_WORKFLOW_ID: ${{ github.run_id }}
+  GITHUB_REPOSITORY_NAME: ${{ github.event.repository.name }}
   
 jobs:
   Manage-Mergeability:
@@ -37,16 +23,15 @@ jobs:
               echo 'Event name:' ${{ github.event_name }}
      
       - name: Validate PR Title
-        id: validatePRTitle
         if: github.event_name == 'pull_request'
         run:  |
                 echo PR Numer is: $GITHUB_PR_NUMBER
                 
                 restApiPRTitle=$(curl \
                                       -H "Accept: application/vnd.github.v3+json" \
-                                      https://api.github.com/repos/naregkar/devAutoMerge/pulls/$GITHUB_PR_NUMBER | jq  -r '.title')
+                                      https://api.github.com/repos/naregkar/$GITHUB_REPOSITORY_NAME/pulls/$GITHUB_PR_NUMBER | jq  -r '.title')
                 
-                echo $restApiPRTitle
+                echo 'Entered title is:' $restApiPRTitle
                 
                 if [[ $restApiPRTitle =~ ^\[DT-[0-9]+\] ]]; then
                   #if the title matches the pattern
@@ -63,64 +48,112 @@ jobs:
                 fi
                      
       
-      - name: Read version from Jira Issue
+      - name: Read Issue details from Jira's API
         if: github.event_name == 'pull_request'
         run : |
-               restApiGET=$(curl --request GET \
+               restApiGETJiraIssueDetails=$(curl --request GET \
                   --url 'https://naregkar.atlassian.net/rest/api/3/issue/${{ env.JiraId }}/' \
                   --user 'nareg.karamanoukian@picsart.com:oBJTrxuI3qf0Do1MBpGbBE87' \
-                  --header 'Accept: application/json' | jq -r '.fields.fixVersions[].name');                   
-              
-               echo "pr_version=$restApiGET" >> $GITHUB_ENV                   
+                  --header 'Accept: application/json');        
+               
+               jira_Issue_Type=$(echo $restApiGETJiraIssueDetails | jq -r '.fields.issuetype.name')           
+               
+               echo "JiraIssueType=$jira_Issue_Type" >> $GITHUB_ENV
+               
+               if [[ "$jira_Issue_Type" == "Story" ]] || [[ "$jira_Issue_Type" == "Bug" ]] || [[ "$jira_Issue_Type" == "Task" ]]; then                
+                    jira_Issue_Status=$(echo $restApiGETJiraIssueDetails | jq -r '.fields.status.name')
+                    
+                    fixedVersionCount=$(echo $restApiGETJiraIssueDetails | jq -r '.fields.fixVersions' | jq length)
+                    
+                    if [[ "$fixedVersionCount" -gt 1 ]]; then
+                        echo 'There are two versions assigned for this Jira Issue. Set one version.'
+                        exit 1
+                    fi
+                    
+                    jira_PR_Version=$(echo $restApiGETJiraIssueDetails | jq -r '.fields.fixVersions[].name')
+               else
+                    #in case the PR is linked to a sub-task
+                    
+                    jira_Issue_ParentId=$(echo $restApiGETJiraIssueDetails | jq -r '.fields.parent.key')
+                    echo 'Parent ID:' $jira_Issue_ParentId    
+                        
+                    jira_Issue_Status=$(echo $restApiGETJiraIssueDetails | jq -r '.fields.parent.fields.status.name')
+                    echo 'Parent Status:' $jira_Issue_Status
+                                                           
+                    restApiGETJiraParentIssueDetails=$(curl --request GET \
+                      --url 'https://naregkar.atlassian.net/rest/api/3/issue/'$jira_Issue_ParentId'/' \
+                      --user 'nareg.karamanoukian@picsart.com:oBJTrxuI3qf0Do1MBpGbBE87' \
+                      --header 'Accept: application/json');
+                      
+                    fixedVersionCount=$(echo $restApiGETJiraParentIssueDetails | jq -r '.fields.fixVersions' | jq length)
+                    
+                    if [[ "$fixedVersionCount" -gt 1 ]]; then
+                        echo 'There are two versions assigned to the parent of this Jira Issue. Set one version.'
+                        exit 1
+                    fi
+                    
+                    jira_PR_Version=$(echo $restApiGETJiraParentIssueDetails | jq -r '.fields.fixVersions[].name')
+                      
+                    echo 'Fixed Version assigned for the parent is:' $jira_PR_Version
+                    
+               fi
+               
+               if [[ ${jira_Issue_Status} == "Done" ]]; then
+                    echo 'You cannot associate this PR to a closed Jira Issue.'
+                    exit 1
+               fi
+               
+               if [[ -z ${jira_PR_Version} ]]; then
+                    echo 'No version specified in Jira Issue.'
+                    exit 1
+               fi
+               
+               echo "JiraStatus=$jira_Issue_Status" >> $GITHUB_ENV               
+               echo "JiraPRVersion=$jira_PR_Version" >> $GITHUB_ENV
               
       - name: Read the version file from the master branch
         if: github.event_name == 'pull_request'
         run : |
                contentMaster=$(curl \
                                -H "Accept: application/vnd.github.v3+json" \
-                               https://api.github.com/repos/naregkar/devAutoMerge/contents/.github/version | jq -r '.content')
+                               https://api.github.com/repos/naregkar/$GITHUB_REPOSITORY_NAME/contents/.github/version | jq -r '.content')
                                        
-               echo "master_version=$(echo $contentMaster | base64 -d)" >> $GITHUB_ENV
-               
+               echo "MasterVersion=$(echo $contentMaster | base64 -d)" >> $GITHUB_ENV
+             
+             
       - name: Compare values and assess the mergeability based on the version files
         if: github.event_name == 'pull_request'
         run: |
-              echo 'pr version is:' $pr_version
-              echo 'master version is:' $master_version
+              echo 'PR branch version is set to:' $JiraPRVersion
+              echo 'Master branch version is set to:' $MasterVersion
               
-              if [[ "$pr_version" == "$master_version" ]]; then
+              if [[ "$JiraPRVersion" == "$MasterVersion" ]]; then
                 echo 'Matching PR and master versions.'
               else
-                echo 'PR branch planned for a future release. Cannot merge.'
+                echo 'PR branch planned for a future release: '$JiraPRVersion'. Cannot merge now.'
                 exit 1
               fi
-              
-      - name: Read Jira Issue Status
-        id: retrieveJiraStatus
+      
+      - name: Save GitHub info in Jira Issue item
         if: github.event_name == 'pull_request'
         run: |
-              echo ${{ env.JiraId }}
+                echo 'issue type is:' $issue_type
               
-              restApiGETStatus=$(curl --request GET \
-                  --url 'https://naregkar.atlassian.net/rest/api/3/issue/${{ env.JiraId }}/' \
-                  --user 'nareg.karamanoukian@picsart.com:oBJTrxuI3qf0Do1MBpGbBE87' \
-                  --header 'Accept: application/json' | jq -r '.fields.status.name');                   
-            
-              echo "JiraIssue_Status=$restApiGETStatus" >> $GITHUB_ENV
+                #save the repo name and GitHub workflow id
+                curl -D- -u nareg.karamanoukian@picsart.com:oBJTrxuI3qf0Do1MBpGbBE87 \
+                    -X PUT --data '{ "fields": { "customfield_10033" : "'"$GITHUB_REPOSITORY_NAME"'", "customfield_10029" : "'"$GITHUB_WORKFLOW_ID"'"  }}' \
+                    -H "Content-Type: application/json" https://naregkar.atlassian.net/rest/api/3/issue/${{ env.JiraId }}
+      
       
       - name: Assess the Jira Status
         if: github.event_name == 'pull_request'
         run: |
-               echo 'status:' ${{ env.JiraIssue_Status }}
-               
-               curl -D- -u nareg.karamanoukian@picsart.com:oBJTrxuI3qf0Do1MBpGbBE87 \
-                   -X PUT --data '{ "fields": { "customfield_10029" : "'"$GITHUB_WORKFLOW_ID"'" }}' \
-                   -H "Content-Type: application/json" https://naregkar.atlassian.net/rest/api/3/issue/${{ env.JiraId }}
+               echo 'status:' ${{ env.JiraStatus }}
                
                toMergeStatus="Ready to Merge"
                
-               if [[ "${{ env.JiraIssue_Status }}" == "$toMergeStatus" ]]; then
-                 echo "PR can be merged to master"
+               if [[ "${{ env.JiraStatus }}" == "$toMergeStatus" ]]; then
+                 echo "PR can be merged to master."
                else
                  echo "Jira Issue's status is not Ready to Merge. Cannot Merge to master."
                  exit 1
