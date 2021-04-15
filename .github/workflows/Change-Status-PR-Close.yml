@@ -48,6 +48,6 @@ jobs:
       - name: Close Jira Status
         if: github.event_name == 'pull_request'
         run: |
-              curl -D- -u nareg.karamanoukian@picsart.com:oBJTrxuI3qf0Do1MBpGbBE87 \
-                    -X PUT --data '{"transition":{"id":"11"}}' \
-                    -H "Content-Type: application/json" https://naregkar.atlassian.net/rest/api/3/issue/${{ env.JiraId }}
+                curl -D- -u nareg.karamanoukian@picsart.com:oBJTrxuI3qf0Do1MBpGbBE87 \
+                    -X POST --data '{"transition":{"id":"31"}}' \
+                    -H "Content-Type: application/json" https://naregkar.atlassian.net/rest/api/3/issue/${{ env.JiraId }}/transitions
