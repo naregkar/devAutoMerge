@@ -1,0 +1,22 @@
+name: UponPrClosureCloseJira
+
+on:
+    pull_request:
+        types: [closed]
+        branches: 
+          - master
+env:
+  GITHUB_PR_NUMBER: ${{ github.event.pull_request.number }}
+  GITHUB_REPOSITORY_NAME: ${{ github.event.repository.name }}
+  
+jobs:
+  UponPrClosure-CloseJira:
+    runs-on: ubuntu-latest
+    
+    steps:
+      
+      - name: Extract branch name
+        run: |
+              echo "PR_Branch_Name=${{ github.head_ref }}" >> $GITHUB_ENV  
+              echo 'Event name:' ${{ github.event_name }}
+                
