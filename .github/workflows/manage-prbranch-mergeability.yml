@@ -71,7 +71,9 @@ jobs:
                     fi
                     
                     jira_PR_Version=$(echo $restApiGETJiraIssueDetails | jq -r '.fields.fixVersions[].name')
-               else
+                    
+               elif [[ "$jira_Issue_Type" == "Sub-task" ]]; then
+               
                     #in case the PR is linked to a sub-task
                     
                     jira_Issue_ParentId=$(echo $restApiGETJiraIssueDetails | jq -r '.fields.parent.key')
@@ -95,7 +97,11 @@ jobs:
                     jira_PR_Version=$(echo $restApiGETJiraParentIssueDetails | jq -r '.fields.fixVersions[].name')
                       
                     echo 'Fixed Version assigned for the parent is:' $jira_PR_Version
-                    
+               
+               else
+                    #for all other Issue types
+                    echo 'The linked Issue type is not a valid PR associated Jira type.'
+                    exit 1
                fi
                
                if [[ ${jira_Issue_Status} == "Done" ]]; then
