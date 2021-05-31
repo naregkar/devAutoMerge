@@ -61,5 +61,13 @@ jobs:
                     
                     echo 'change status'
                     
+                    curl --request PUT \
+                      --url 'https://naregkar.atlassian.net/rest/api/3/issue/{{ env.JiraId }}/assignee' \
+                      --user 'nareg.karamanoukian@picsart.com:oBJTrxuI3qf0Do1MBpGbBE87' \
+                      --header 'Accept: application/json' \
+                      --header 'Content-Type: application/json' \
+                      --data '{
+                      "accountId": "5fea9ba3dd5eb5010881866b"
+                    }'
+                    
                   fi
-            
