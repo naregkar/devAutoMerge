@@ -52,7 +52,7 @@ jobs:
               jira_Issue_Status=$(echo $restApiGETJiraIssueDetails | jq -r '.fields.status.name')
               
               if [[ ${jira_Issue_Status} != "Code Review" ]]; then
-                echo 'The Jira Issue status is not set to Code Review. Cannot proceed.'
+                echo 'The Jira Issue status is ' $jira_Issue_Status ', not Code Review. Cannot proceed.'
                 exit 1
               fi                         
       
