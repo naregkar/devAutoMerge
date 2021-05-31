@@ -19,6 +19,8 @@ jobs:
         run: |
               echo "PR_Branch_Name=${{ github.head_ref }}" >> $GITHUB_ENV  
               echo 'Event name:' ${{ github.event_name }}
+              echo 'Destination branch for this PR:' ${{ github.base_ref }}
+              
       
       - name: Extract Jira Issue Key
         run:  |
@@ -54,5 +56,9 @@ jobs:
               
               labelShowstopper="Showstopper"
               if [[ ${jira_Issue_Labels[$labelShowstopper]} ]]; then 
-                echo "Exists"; 
+                echo "Destination should be the release branch.";
+                
+                
               fi
+              
+              
