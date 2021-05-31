@@ -49,17 +49,3 @@ jobs:
                             -H "Accept: application/vnd.github.v3+json" \
                             https://api.github.com/repos/naregkar/devAutoMerge/pulls/$GITHUB_PR_NUMBER/reviews)
                   
-                  approverCount=$(echo $restApiGETGitHubReviewersDetails | jq 'group_by(.user.login) | map(select(max_by(.submitted_at) .state == "APPROVED")) | length')
-                  
-                  echo 'approved count is: ' $approverCount
-                  
-                  if [[ "$approverCount" -le 1]]; then
-                    echo 'More reviewers are needed in order to this Jira item to progress within its workflow.'
-                    exit 1
-                  else
-                    
-                    echo 'change status'
-                    
-                    
-                    
-                  fi
