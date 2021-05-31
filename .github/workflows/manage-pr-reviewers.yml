@@ -49,4 +49,6 @@ jobs:
                             -H "Accept: application/vnd.github.v3+json" \
                             https://api.github.com/repos/naregkar/devAutoMerge/pulls/$GITHUB_PR_NUMBER/reviews)
                   
-                approverCount=$(echo $restApiGETGitHubReviewersDetails | jq 'group_by(.user.login) | map(select(max_by(.submitted_at) .state == "APPROVED")) | length')  
+                approverCount=$(echo $restApiGETGitHubReviewersDetails | jq 'group_by(.user.login) | map(select(max_by(.submitted_at) .state == "APPROVED")) | length')
+                
+                echo 'approved count is: ' $approverCount
