@@ -42,6 +42,20 @@ jobs:
                   exit 1
                 fi
       
+      - name: Check issue Status if 'Code Review'
+        run: |
+              restApiGETJiraIssueDetails=$(curl --request GET \
+                  --url 'https://naregkar.atlassian.net/rest/api/3/issue/${{ env.JiraId }}/' \
+                  --user 'nareg.karamanoukian@picsart.com:oBJTrxuI3qf0Do1MBpGbBE87' \
+                  --header 'Accept: application/json');
+                  
+              jira_Issue_Status=$(echo $restApiGETJiraIssueDetails | jq -r '.fields.status.name')
+              
+              if [[ ${jira_Issue_Status} != "Code Review" ]]; then
+                echo 'The Jira Issue status is not set to Code Review. Cannot proceed.'
+                exit 1
+              fi                         
+      
       - name: Assess PR Reviewers Count
         run:  |
                 
