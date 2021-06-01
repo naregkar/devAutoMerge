@@ -53,26 +53,22 @@ jobs:
                   --header 'Accept: application/json');
                   
               jira_Issue_Labels=$(echo $restApiGETJiraIssueDetails | jq -r '.fields.labels')
+              jira_Issue_Labels_Count=$(echo $jira_Issue_Labels | jq length)              
+              
               echo 'jira_Issue_Labels:' $jira_Issue_Labels
+              echo 'jira_Issue_Labels_Count:' $jira_Issue_Labels_Count
               
-              targetBranch=${{ github.event.pull_request.base.ref }}
-              echo 'targetBranch: ' $targetBranch
-              
-              if [ ${#jira_Issue_Labels[@]} -eq 0 ]; then
-                  echo 'empty array'
-              else
-                  echo 'not empty'
-              fi
-
-
-                 
-              if [[ " ${jira_Issue_Labels[@]} " =~ "Showstopper" &&  $targetBranch == "release" ]]; then
-                echo 'Correct, release'
-              elif [[ ${jira_Issue_Labels[@]} " =~ "Hotfix" &&  $targetBranch == "live" ]]; then
-                echo 'Correct, live'
-              elif [[ ${jira_Issue_Labels[@]} " =~ "" &&  $targetBranch == "master" ]]; then
-                echo 'Correct, master'
-              else
-                echo 'wrong'
-                exit 1
+              if [[ $jira_Issue_Labels_Count -eq 1 ]]; then
+                
+                targetBranch=${{ github.event.pull_request.base.ref }}
+                echo 'targetBranch: ' $targetBranch
+                
+                if [[ " ${jira_Issue_Labels[@]} " =~ "Showstopper" &&  $targetBranch == "release" ]]; then
+                  echo 'Correct, release'
+                elif [[ ${jira_Issue_Labels[@]} " =~ "Hotfix" &&  $targetBranch == "live" ]]; then
+                  echo 'Correct, live'
+                else
+                  echo 'wrong'
+                  exit 1
+                fi                
               fi
