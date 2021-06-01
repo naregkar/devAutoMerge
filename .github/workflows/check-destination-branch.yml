@@ -58,10 +58,10 @@ jobs:
               targetBranch=${{ github.event.pull_request.base.ref }}
               echo 'targetBranch: ' $targetBranch
               
-              if [ -z "$jira_Issue_Labels" ]; then
-                echo "Array empty"
+              if [ ${#jira_Issue_Labels[@]} -eq 0 ]; then
+                  echo 'empty array'
               else
-                echo "Array non empty"
+                  echo 'not empty'
               fi
 
 
