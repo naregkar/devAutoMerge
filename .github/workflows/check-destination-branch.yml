@@ -60,7 +60,7 @@ jobs:
               #  echo "Destination should be the release branch.";                
               #fi
               
-              if [[ " ${jira_Issue_Labels[*]} " == *"$labelShowstopper"* ]]; then
+              if [[ " ${jira_Issue_Labels[*]} " == *$labelShowstopper* ]]; then
                 echo "arr contains d"
               fi
               
