@@ -63,9 +63,9 @@ jobs:
                 targetBranch=${{ github.event.pull_request.base.ref }}
                 echo 'targetBranch: ' $targetBranch
                 
-                if [[ " ${jira_Issue_Labels[@]} " =~ "Showstopper" &&  $targetBranch == "release" ]]; then
+                if [[ "${jira_Issue_Labels[@]}" =~ "Showstopper" &&  $targetBranch == "release" ]]; then
                   echo 'Correct, release'
-                elif [[ ${jira_Issue_Labels[@]} " =~ "Hotfix" &&  $targetBranch == "live" ]]; then
+                elif [[ "${jira_Issue_Labels[@]}" =~ "Hotfix" &&  $targetBranch == "live" ]]; then
                   echo 'Correct, live'
                 else
                   echo 'wrong'
