@@ -53,14 +53,20 @@ jobs:
                   --header 'Accept: application/json');
                   
               jira_Issue_Labels=$(echo $restApiGETJiraIssueDetails | jq -r '.fields.labels')
+              echo 'jira_Issue_Labels:' $jira_Issue_Labels
               
-              echo 'before label'
-              labelShowstopper="Showstopper"
-              #if [[ ${jira_Issue_Labels[$labelShowstopper]} ]]; then 
-              #  echo "Destination should be the release branch.";                
-              #fi
-              
-              if [[ " ${jira_Issue_Labels[*]} " == *"$labelShowstopper"* ]]; then
-                echo "arr contains d"
+              targetBranch=${{ github.event.pull_request.base.ref }}
+              echo 'targetBranch: ' $targetBranch
+
+
+                 
+              if [[ " ${jira_Issue_Labels[@]} " =~ "Showstopper" &&  $targetBranch == "release" ]]; then
+                echo 'Correct, release'
+              elif [[ ${jira_Issue_Labels[@]} " =~ "Hotfix" &&  $targetBranch == "live" ]]; then
+                echo 'Correct, live'
+              elif [[ ${jira_Issue_Labels[@]} " =~ "" &&  $targetBranch == "master" ]]; then
+                echo 'Correct, master'
+              else
+                echo 'wrong'
+                exit 1
               fi
-              
