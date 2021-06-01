@@ -54,17 +54,13 @@ jobs:
                   
               jira_Issue_Labels=$(echo $restApiGETJiraIssueDetails | jq -r '.fields.labels')
               
-              contains() {
-                [[ $1 =~ (^|[[:space:]])$2($|[[:space:]]) ]] && exit(0) || exit(1)
-              }
-              
               echo 'before label'
               labelShowstopper="Showstopper"
               #if [[ ${jira_Issue_Labels[$labelShowstopper]} ]]; then 
               #  echo "Destination should be the release branch.";                
               #fi
               
-              contains jira_Issue_Labels labelShowstopper
-              echo 'after contains'
-              echo $?
+              if [[ " ${jira_Issue_Labels[*]} " == *"$labelShowstopper"* ]]; then
+                echo "arr contains d"
+              fi
               
