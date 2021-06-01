@@ -53,25 +53,39 @@ jobs:
                   --user 'nareg.karamanoukian@picsart.com:oBJTrxuI3qf0Do1MBpGbBE87' \
                   --header 'Accept: application/json');
                   
-              jira_Issue_Labels=$(echo $restApiGETJiraIssueDetails | jq -r '.fields.labels')
-              jira_Issue_Labels_Count=$(echo $jira_Issue_Labels | jq length)              
+              jira_Issue_TargetBranch=$(echo $restApiGETJiraIssueDetails | jq -r '.fields.customfield_10036.value')
+              #jira_Issue_Labels_Count=$(echo $jira_Issue_Labels | jq length)              
               
-              echo 'jira_Issue_Labels:' $jira_Issue_Labels
-              echo 'jira_Issue_Labels_Count:' $jira_Issue_Labels_Count
+              echo 'jira_Issue_TargetBranch:' $jira_Issue_TargetBranch
+              #echo 'jira_Issue_Labels_Count:' $jira_Issue_Labels_Count
               
-              if [[ $jira_Issue_Labels_Count -eq 1 ]]; then
+              #if [[ $jira_Issue_Labels_Count -eq 1 ]]; then
+              #fi
+              
+              targetBranch=${{ github.event.pull_request.base.ref }}
+              echo 'targetBranch: ' $targetBranch
                 
-                targetBranch=${{ github.event.pull_request.base.ref }}
-                echo 'targetBranch: ' $targetBranch
                 
-                if [[ "${jira_Issue_Labels[@]}" =~ "Sprint" &&  $targetBranch == "master" ]]; then
-                  echo 'Correct, master'
-                elif [[ "${jira_Issue_Labels[@]}" =~ "Showstopper" &&  $targetBranch == "release" ]]; then
-                  echo 'Correct, release'
-                elif [[ "${jira_Issue_Labels[@]}" =~ "Hotfix" &&  $targetBranch == "live" ]]; then
-                  echo 'Correct, live'
-                else
-                  echo 'wrong'
-                  exit 1
-                fi                
+              if [[ "$jira_Issue_TargetBranch" == "Master" &&  $targetBranch == "master" ]]; then
+                echo 'Correct, master'
+              elif [[ "$jira_Issue_TargetBranch" == "Release" &&  $targetBranch == "release" ]]; then
+                echo 'Correct, release'
+              elif [[ "$jira_Issue_TargetBranch" == "Live" &&  $targetBranch == "live" ]]; then
+                echo 'Correct, live'
+              else
+                echo 'wrong'
+                exit 1
               fi
+                
+                
+                #if [[ "${jira_Issue_Labels[@]}" =~ "Sprint" &&  $targetBranch == "master" ]]; then
+                #  echo 'Correct, master'
+                #elif [[ "${jira_Issue_Labels[@]}" =~ "Showstopper" &&  $targetBranch == "release" ]]; then
+                #  echo 'Correct, release'
+                #elif [[ "${jira_Issue_Labels[@]}" =~ "Hotfix" &&  $targetBranch == "live" ]]; then
+                #  echo 'Correct, live'
+                #else
+                #  echo 'wrong'
+                #   exit 1
+                #fi                
+              
