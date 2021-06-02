@@ -48,11 +48,11 @@ jobs:
               jira_Issue_Status=$(echo $restApiGETJiraIssueDetails | jq -r '.fields.status.name')
               
               if [[ ${jira_Issue_Status} != "Code Review" ]]; then
-                echo 'The Jira Issue status is $jira_Issue_Status for ${{ env.JiraId }}. Cannot proceed when the status is not set to Code Review.'
+                echo 'The Jira Issue status is $jira_Issue_Status for Issue: ${{ env.JiraId }}. Cannot proceed when the status is not set to Code Review.'
                 exit 1
               fi                         
       
-      - name: Assess PR Reviewers Count
+      - name: Assess the PR Reviewers Count
         run:  |
                 
                 restApiGETGitHubReviewersDetails=$(curl \
@@ -80,7 +80,7 @@ jobs:
                       "accountId": "5fea9ba3dd5eb5010881866b"
                     }'
                     
-                    #Change Jira issue Status to QA Open
+                    #Change the Jira issue Status to QA Open
                     curl -D- -u nareg.karamanoukian@picsart.com:oBJTrxuI3qf0Do1MBpGbBE87 \
                       -X POST --data '{"transition":{"id":"61"}}' \
                       -H "Content-Type: application/json" https://naregkar.atlassian.net/rest/api/3/issue/${{ env.JiraId }}/transitions
