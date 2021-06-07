@@ -74,7 +74,7 @@ jobs:
                     #assign Jira Issue to a certain person/unassign depends on the team
                     curl --request PUT \
                       --url 'https://naregkar.atlassian.net/rest/api/3/issue/${{ env.JiraId }}/assignee' \
-                      --user 'nareg.karamanoukian@picsart.com:oBJTrxuI3qf0Do1MBpGbBE87' \
+                      --user '${{ secrets.JIRA_USER_EMAIL }}:${{ secrets.JIRA_API_TOKEN }}' \
                       --header 'Accept: application/json' \
                       --header 'Content-Type: application/json' \
                       --data '{
@@ -82,7 +82,7 @@ jobs:
                     }'
                     
                     #Change the Jira issue Status to QA Open
-                    curl -D- -u nareg.karamanoukian@picsart.com:oBJTrxuI3qf0Do1MBpGbBE87 \
+                    curl -D- -u ${{ secrets.JIRA_USER_EMAIL }}:${{ secrets.JIRA_API_TOKEN }} \
                       -X POST --data '{"transition":{"id":"61"}}' \
                       -H "Content-Type: application/json" https://naregkar.atlassian.net/rest/api/3/issue/${{ env.JiraId }}/transitions
          
