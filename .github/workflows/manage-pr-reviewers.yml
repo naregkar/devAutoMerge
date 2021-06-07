@@ -43,7 +43,7 @@ jobs:
         run: |
               restApiGETJiraIssueDetails=$(curl --request GET \
                   --url 'https://naregkar.atlassian.net/rest/api/3/issue/${{ env.JiraId }}/' \
-                  --user 'nareg.karamanoukian@picsart.com:oBJTrxuI3qf0Do1MBpGbBE87' \
+                  --user '${{ secrets.JIRA_USER_EMAIL }}:${{ secrets.JIRA_API_TOKEN }}' \
                   --header 'Accept: application/json');
                   
               jira_Issue_Status=$(echo $restApiGETJiraIssueDetails | jq -r '.fields.status.name')
