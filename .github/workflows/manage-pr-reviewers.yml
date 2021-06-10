@@ -2,13 +2,13 @@ name: ManagePRReviewers
 
 on:
   pull_request:
-    types: [edited]
+    types: [edited, review_requested]
     branches:
     - master
-  pull_request_review:
-    types: [submitted]
-    branches:
-    - master
+  #pull_request_review:
+  #  types: [submitted]
+  #  branches:
+  #  - master
 env:
   GITHUB_PR_NUMBER: ${{ github.event.pull_request.number }}
   GITHUB_REPOSITORY_NAME: ${{ github.event.repository.name }}
