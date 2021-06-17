@@ -1,4 +1,4 @@
-name: ManagePRReviewers
+name: Manage PR Code Reviewers
 
 on:
   pull_request:
