@@ -1,3 +1,3 @@
-    ================
-    MAKE SURE TO NAME THE PULL REQUEST IN THE FORMAT OF: **[PW-xxxx] Some title**    
-    ================
+    =========================================================================
+    MAKE SURE TO NAME THE PULL REQUEST IN THE FORMAT OF: [PW-xxxx] Some title   
+    =========================================================================
