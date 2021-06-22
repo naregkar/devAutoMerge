@@ -34,11 +34,12 @@ jobs:
                 else
                   echo 'PR Title does not comply with the required pattern - [PW-xxxx]'
                   
-                  restApiPRTitle=$(curl \
-                                      -X PATCH \
-                                      -H "Accept: application/vnd.github.v3+json" \
-                                      -H 'authorization: token ${{ secrets.TOKEN_GITHUB }}' \
-                                      https://api.github.com/repos/naregkar/$GITHUB_REPOSITORY_NAME/pulls/$GITHUB_PR_NUMBER \
-                                      -d '{"state": "closed"}'
+                  curl \
+                        -X PATCH \
+                        -H "Accept: application/vnd.github.v3+json" \
+                        -H 'authorization: token ${{ secrets.TOKEN_GITHUB }}' \
+                        https://api.github.com/repos/naregkar/$GITHUB_REPOSITORY_NAME/pulls/$GITHUB_PR_NUMBER \
+                        -d '{"state": "closed"}'
+                  
                   #exit 1
                 fi
