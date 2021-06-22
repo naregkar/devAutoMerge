@@ -1,0 +1,38 @@
+name: ValidateTitle
+
+on:
+  pull_request:
+env:
+  GITHUB_PR_NUMBER: ${{ github.event.pull_request.number }}
+  GITHUB_REPOSITORY_NAME: ${{ github.event.repository.name }}
+  
+jobs:
+  Manage-PRReviewers:
+    runs-on: ubuntu-latest
+    
+    steps:
+      
+      - name: Extract Jira Issue Key
+        run:  |
+                echo PR Numer is: $GITHUB_PR_NUMBER
+                
+                restApiPRTitle=$(curl \
+                                      -H "Accept: application/vnd.github.v3+json" \
+                                      -H 'authorization: token ${{ secrets.TOKEN_GITHUB }}' \
+                                      https://api.github.com/repos/naregkar/$GITHUB_REPOSITORY_NAME/pulls/$GITHUB_PR_NUMBER | jq  -r '.title')
+                
+                echo 'Entered title is:' $restApiPRTitle
+                
+                if [[ $restApiPRTitle =~ ^\[DT-[0-9]+\] ]]; then
+                  #if the title matches the required pattern
+                  
+                  jira_IdUnparsed=$restApiPRTitle
+                  jira_id=${jira_IdUnparsed%]*}
+                  jira_id=${jira_id:1}
+                  echo "JiraId=$jira_id" >> $GITHUB_ENV
+                  
+                else
+                  echo 'PR Title does not comply with the required pattern - [PW-xxxx]'                  
+                  exit 1
+                fi
+   
