@@ -1,11 +1,6 @@
 name: Manage PR Code Reviewers
 
 on:
-  pull_request:
-    branches:
-    - master
-    - release
-    - live
   pull_request_review:
     types: [submitted]
     branches:
