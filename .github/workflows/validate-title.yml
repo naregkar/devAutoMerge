@@ -1,4 +1,4 @@
-name: ValidateTitle
+name: Validate PR Title
 
 on:
   pull_request:
@@ -7,7 +7,7 @@ env:
   GITHUB_REPOSITORY_NAME: ${{ github.event.repository.name }}
   
 jobs:
-  Manage-PRReviewers:
+  Validate-PR-Title:
     runs-on: ubuntu-latest
     
     steps:
