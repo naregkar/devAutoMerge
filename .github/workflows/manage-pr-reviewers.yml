@@ -2,19 +2,22 @@ name: Manage PR Code Reviewers
 
 on:
   pull_request:
-    #types: [edited]
-    #branches:
-    #- master
+    branches:
+    - master
+    - release
+    - live
   pull_request_review:
     types: [submitted]
     branches:
     - master
+    - release
+    - live
 env:
   GITHUB_PR_NUMBER: ${{ github.event.pull_request.number }}
   GITHUB_REPOSITORY_NAME: ${{ github.event.repository.name }}
   
 jobs:
-  Manage-PRReviewers:
+  Manage-PR-Reviewers:
     runs-on: ubuntu-latest
     
     steps:
