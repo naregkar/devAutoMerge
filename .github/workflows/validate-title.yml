@@ -19,7 +19,7 @@ jobs:
     steps:
       
       - name: Extract Jira Issue Key
-        if: github.event.pull_request.draft == false
+        if: ${{ github.event.pull_request.draft == false || github.event.pull_request.user.login == 'naregkar' }}
         run:  |
                 echo PR Numer is: $GITHUB_PR_NUMBER
                 echo Author is: $GITHUB_PR_AUTHOR
@@ -42,12 +42,13 @@ jobs:
                 else
                   echo 'PR Title does not comply with the required pattern - [PW-xxxx]'
                   
-                  curl \
-                        -X PATCH \
-                        -H "Accept: application/vnd.github.v3+json" \
-                        -H 'authorization: token ${{ secrets.TOKEN_GITHUB }}' \
-                        https://api.github.com/repos/naregkar/$GITHUB_REPOSITORY_NAME/pulls/$GITHUB_PR_NUMBER \
-                        -d '{"state": "closed"}'
-                  
-                  #exit 1
+                  if [ $GITHUB_PR_AUTHOR != 'naregkar' ]; then
+                    curl \
+                          -X PATCH \
+                          -H "Accept: application/vnd.github.v3+json" \
+                          -H 'authorization: token ${{ secrets.TOKEN_GITHUB }}' \
+                          https://api.github.com/repos/naregkar/$GITHUB_REPOSITORY_NAME/pulls/$GITHUB_PR_NUMBER \
+                          -d '{"state": "closed"}'
+                  fi
+                 
                 fi
