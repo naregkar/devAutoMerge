@@ -19,10 +19,10 @@ jobs:
     steps:
       
       - name: Extract Jira Issue Key
-        if: ${{ github.event.pull_request.draft == false || github.event.pull_request.user.login == 'naregkar' }}
+        if: github.event.pull_request.draft == false
         run:  |
                 echo PR Numer is: $GITHUB_PR_NUMBER
-                echo Author is: $GITHUB_PR_AUTHOR
+                echo Author is: ${{ secrets.RM_LIST }}
                 
                 restApiPRTitle=$(curl \
                                       -H "Accept: application/vnd.github.v3+json" \
