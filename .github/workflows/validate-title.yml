@@ -10,6 +10,7 @@ on:
 env:
   GITHUB_PR_NUMBER: ${{ github.event.pull_request.number }}
   GITHUB_REPOSITORY_NAME: ${{ github.event.repository.name }}
+  GITHUB_PR_AUTHOR: ${{ github.event.pull_request.user.login }}
   
 jobs:
   Validate-PR-Title:
@@ -21,6 +22,7 @@ jobs:
         if: github.event.pull_request.draft == false
         run:  |
                 echo PR Numer is: $GITHUB_PR_NUMBER
+                echo Author is: $GITHUB_PR_AUTHOR
                 
                 restApiPRTitle=$(curl \
                                       -H "Accept: application/vnd.github.v3+json" \
