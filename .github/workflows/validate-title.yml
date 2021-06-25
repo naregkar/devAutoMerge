@@ -10,7 +10,6 @@ on:
 env:
   GITHUB_PR_NUMBER: ${{ github.event.pull_request.number }}
   GITHUB_REPOSITORY_NAME: ${{ github.event.repository.name }}
-  GITHUB_PR_AUTHOR: ${{ github.event.pull_request.user.login }}
   
 jobs:
   Validate-PR-Title:
@@ -22,7 +21,6 @@ jobs:
         if: github.event.pull_request.draft == false
         run:  |
                 echo PR Numer is: $GITHUB_PR_NUMBER
-                #echo Author is: ${{ secrets.RM_LIST }}
                 
                 restApiPRTitle=$(curl \
                                       -H "Accept: application/vnd.github.v3+json" \
@@ -40,15 +38,14 @@ jobs:
                   echo "JiraId=$jira_id" >> $GITHUB_ENV
                   
                 else
+                  #PR title is in the wrong format, the PR (if not draft) shall be closed
                   echo 'PR Title does not comply with the required pattern - [PW-xxxx]'
                   
-                  if [ $GITHUB_PR_AUTHOR != 'naregkar' ]; then
-                    curl \
-                          -X PATCH \
-                          -H "Accept: application/vnd.github.v3+json" \
-                          -H 'authorization: token ${{ secrets.TOKEN_GITHUB }}' \
-                          https://api.github.com/repos/naregkar/$GITHUB_REPOSITORY_NAME/pulls/$GITHUB_PR_NUMBER \
-                          -d '{"state": "closed"}'
-                  fi
-                 
+                  curl \
+                        -X PATCH \
+                        -H "Accept: application/vnd.github.v3+json" \
+                        -H 'authorization: token ${{ secrets.TOKEN_GITHUB }}' \
+                        https://api.github.com/repos/naregkar/$GITHUB_REPOSITORY_NAME/pulls/$GITHUB_PR_NUMBER \
+                        -d '{"state": "closed"}'
+                  
                 fi
