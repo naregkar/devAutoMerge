@@ -38,14 +38,17 @@ jobs:
                   echo "JiraId=$jira_id" >> $GITHUB_ENV
                   
                 else
-                  #PR title is in the wrong format, the PR (if not draft) shall be closed
-                  echo 'PR Title does not comply with the required pattern - [PW-xxxx]'
+                
+                  if [[ ${{ github.event.pull_request.user.login }} != {{ secrets.RM_USERNAME }} ]]; then
+                    #PR title is in the wrong format, the PR (if not draft) shall be closed
+                    echo 'PR Title does not comply with the required pattern - [PW-xxxx]'
                   
-                  curl \
-                        -X PATCH \
-                        -H "Accept: application/vnd.github.v3+json" \
-                        -H 'authorization: token ${{ secrets.TOKEN_GITHUB }}' \
-                        https://api.github.com/repos/naregkar/$GITHUB_REPOSITORY_NAME/pulls/$GITHUB_PR_NUMBER \
-                        -d '{"state": "closed"}'
+                    curl \
+                          -X PATCH \
+                          -H "Accept: application/vnd.github.v3+json" \
+                          -H 'authorization: token ${{ secrets.TOKEN_GITHUB }}' \
+                          https://api.github.com/repos/naregkar/$GITHUB_REPOSITORY_NAME/pulls/$GITHUB_PR_NUMBER \
+                          -d '{"state": "closed"}'
+                  fi
                   
                 fi
