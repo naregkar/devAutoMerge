@@ -39,7 +39,7 @@ jobs:
                   
                 else
                 
-                  if [[ ${{ github.event.pull_request.user.login }} != {{ secrets.RM_USERNAME }} ]]; then
+                  if [[ ${{ github.event.pull_request.user.login }} != ${{ secrets.RM_USERNAME }} ]]; then
                     #PR title is in the wrong format, the PR (if not draft) shall be closed
                     echo 'PR Title does not comply with the required pattern - [PW-xxxx]'
                   
