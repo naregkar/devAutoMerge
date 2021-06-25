@@ -22,7 +22,7 @@ jobs:
         if: github.event.pull_request.draft == false
         run:  |
                 echo PR Numer is: $GITHUB_PR_NUMBER
-                echo Author is: ${{ secrets.RM_LIST }}
+                #echo Author is: ${{ secrets.RM_LIST }}
                 
                 restApiPRTitle=$(curl \
                                       -H "Accept: application/vnd.github.v3+json" \
