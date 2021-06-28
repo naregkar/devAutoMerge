@@ -5,7 +5,7 @@ hello
 dt-47
 
 c
-DT-52
+DT-52f
 
 hey
 hello
