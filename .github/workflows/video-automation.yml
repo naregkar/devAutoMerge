@@ -34,12 +34,16 @@ jobs:
               echo 'headsha: ' ${{ github.event.pull_request.head.sha }}
               echo 'repo: ' ${GITHUB_REPOSITORY}
               
-              if [[ ${{ github.base_ref }} == 'master' ]]; then
-                echo 'inside iffff'
+              if [[ ${{ github.base_ref }} == 'release' ]]; then
+                echo 'inside iffff, release'
+              else
+              
+                echo 'master part'
                 
                 if [[ 1 == 1 ]]; then
                   echo 'hey'
                 fi
+                
                 
               fi
                 
