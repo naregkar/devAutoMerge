@@ -17,7 +17,8 @@ jobs:
     steps:
       
       - name: branch name
-        #if: github.ref == 'refs/heads/master'
+        if: github.base_ref == 'master'
         run: |
               echo 'base ref: ' ${{ github.base_ref }}
+              echo 'master to be merged'
                 
