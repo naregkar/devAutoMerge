@@ -34,7 +34,11 @@ jobs:
               echo 'headsha: ' ${{ github.event.pull_request.head.sha }}
               echo 'repo: ' ${GITHUB_REPOSITORY}
               
-              if [[ ${{ github.base_ref }} == 'release' ]]; then
+              
+              targetBranch=${{ github.base_ref }}
+              echo 'targetBranch is: ' $targetBranch
+              
+              if [[ $targetBranch == 'release' ]]; then
                 echo 'inside iffff, release'
               else
               
