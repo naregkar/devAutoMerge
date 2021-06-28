@@ -77,6 +77,8 @@ jobs:
                 else
                     echo 'Minimum number of code reviewers passed. Change assignee and status.'
                     
+                    echo "CodeReviewDone=true" >> "$GITHUB_ENV"
+                    
                     #assign Jira Issue to a certain person/unassign depends on the team
                     curl --request PUT \
                       --url 'https://naregkar.atlassian.net/rest/api/3/issue/${{ env.JiraId }}/assignee' \
@@ -93,3 +95,8 @@ jobs:
                       -H "Content-Type: application/json" https://naregkar.atlassian.net/rest/api/3/issue/${{ env.JiraId }}/transitions
          
                 fi
+                
+                
+      - name: Jenkins Job
+        if: ${{ github.base_ref == 'master' && evn.CodeReviewDone == 'true' }}
+        run: echo 'heyyyyyy'
