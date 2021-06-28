@@ -22,4 +22,8 @@ jobs:
               echo 'base ref: ' ${{ github.base_ref }}
               echo 'master to be merged'
               echo 'headsha: ' ${{ github.event.pull_request.head.sha }}
+              
+              if [[ ${{ github.base_ref }} == 'master' ]]; then
+                echo 'inside iffff'
+              fi
                 
