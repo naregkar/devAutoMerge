@@ -1,0 +1,22 @@
+name: Video Autoamtion
+
+on:
+  pull_request:
+    branches:
+    - master
+    - release
+    - live
+env:
+  GITHUB_PR_NUMBER: ${{ github.event.pull_request.number }}
+  GITHUB_REPOSITORY_NAME: ${{ github.event.repository.name }}
+  
+jobs:
+  Video-Automation:
+    runs-on: ubuntu-latest
+    
+    steps:
+      
+      - name: branch name
+        run: |
+              echo 'event name: ' ${{ github.event_name }}
+                
