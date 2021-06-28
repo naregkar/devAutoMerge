@@ -17,6 +17,7 @@ jobs:
     steps:
       
       - name: branch name
+        if: github.ref == 'refs/heads/master'
         run: |
               echo 'event name: ' ${{ github.event_name }}
                 
