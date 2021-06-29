@@ -94,10 +94,7 @@ jobs:
                 
                 
       - name: Jenkins Job
-        if: |
-              ${{ 
-                  github.event.pull_request.base.ref == 'master' && env.CodeReviewDone == 'true'
-               }}    
+        if: github.event.pull_request.base.ref == 'master' && env.CodeReviewDone == 'true'   
         run: |
                 echo 'heyyyyyy'
                 echo 'env: ' ${{ env.CodeReviewDone }}
