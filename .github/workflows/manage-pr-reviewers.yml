@@ -67,16 +67,13 @@ jobs:
                 
                 echo 'Number of approved reviewers:' $approverCount
                 
-                targetBranch=${{ github.base_ref }}
-                echo 'targetBranch is: ' $targetBranch
-                
-                if [[ "$approverCount" -lt 2 ]]; then
+                if [[ "$approverCount" -lt 1 ]]; then
                     echo 'More reviewers are needed in order for this Jira item to progress within its workflow.'
                     exit 1
                 else
                     echo 'Minimum number of code reviewers passed. Change assignee and status.'
                     
-                    echo "CodeReviewDone=true" >> "$GITHUB_ENV"
+                    echo "CodeReviewDone=true" >> $GITHUB_ENV
                     
                     #assign Jira Issue to a certain person/unassign depends on the team
                     curl --request PUT \
@@ -97,5 +94,10 @@ jobs:
                 
                 
       - name: Jenkins Job
-        if: ${{ github.base_ref == 'master' && env.CodeReviewDone == 'true' }}
-        run: echo 'heyyyyyy'
+        if: |
+              ${{ 
+                  github.event.pull_request.base.ref == 'master' && env.CodeReviewDone == 'true'
+               }}    
+        run: |
+                echo 'heyyyyyy'
+                echo 'env: ' ${{ env.CodeReviewDone }}
