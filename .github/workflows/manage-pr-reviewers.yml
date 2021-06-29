@@ -17,6 +17,8 @@ jobs:
         run:  |
                 echo PR Numer is: $GITHUB_PR_NUMBER
                 
+                echo 'aaaa' ${{ github.base_ref }}
+                
                 restApiPRTitle=$(curl \
                                       -H "Accept: application/vnd.github.v3+json" \
                                       -H 'authorization: token ${{ secrets.TOKEN_GITHUB }}' \
@@ -36,8 +38,7 @@ jobs:
                   echo 'PR Title does not comply with the required pattern - [PW-xxxx]'                  
                   exit 1
                 fi
-                
-                echo ${{ github.base_ref }}
+                              
          
       - name: Check if Jira issue Status is 'Code Review'
         run: |
