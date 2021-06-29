@@ -97,7 +97,9 @@ jobs:
                 
       - name: Jenkins Job
         if: |
-             github.base_ref == 'master' && env.CodeReviewDone == 'true'
+              ${{ 
+                  github.base_ref == 'master' && env.CodeReviewDone == 'true'
+               }}    
         run: |
                 echo 'heyyyyyy'
                 echo 'env: ' ${{ env.CodeReviewDone }}
