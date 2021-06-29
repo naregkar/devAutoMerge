@@ -17,8 +17,6 @@ jobs:
         run:  |
                 echo PR Numer is: $GITHUB_PR_NUMBER
                 
-                echo 'aaaa' ${{ github.event.pull_request.base.ref }}
-                
                 restApiPRTitle=$(curl \
                                       -H "Accept: application/vnd.github.v3+json" \
                                       -H 'authorization: token ${{ secrets.TOKEN_GITHUB }}' \
@@ -105,7 +103,7 @@ jobs:
       - name: Jenkins Job
         if: |
               ${{ 
-                  github.base_ref == 'master' && env.CodeReviewDone == 'true'
+                  github.event.pull_request.base.ref == 'master' && env.CodeReviewDone == 'true'
                }}    
         run: |
                 echo 'heyyyyyy'
