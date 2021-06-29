@@ -73,7 +73,7 @@ jobs:
                 else
                     echo 'Minimum number of code reviewers passed. Change assignee and status.'
                     
-                    echo "CodeReviewDone=true" >> "$GITHUB_ENV"
+                    echo "CodeReviewDone=true" >> $GITHUB_ENV
                     
                     #assign Jira Issue to a certain person/unassign depends on the team
                     curl --request PUT \
