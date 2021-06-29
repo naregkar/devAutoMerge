@@ -103,6 +103,8 @@ jobs:
                 
                 if [[ ${{ github.event.pull_request.base.ref }} == 'master' ]]; then
                   echo 'inside if'
+                else
+                  echo 'else'
                 fi
                 
                 echo 'env: ' ${{ env.CodeReviewDone }}
