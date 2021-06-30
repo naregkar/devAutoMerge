@@ -22,6 +22,8 @@ jobs:
         run:  |
                 echo PR Numer is: $GITHUB_PR_NUMBER
                 
+                echo 'test is: ' ?token\=${{ secrets.SOME_TEST }}\&SeleniumUrl
+                
                 restApiPRTitle=$(curl \
                                       -H "Accept: application/vnd.github.v3+json" \
                                       -H 'authorization: token ${{ secrets.TOKEN_GITHUB }}' \
