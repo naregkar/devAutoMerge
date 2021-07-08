@@ -40,11 +40,6 @@ jobs:
                   echo "JiraId=$jira_id" >> $GITHUB_ENV
                   
                 else
-		
-		  if [[ ${{ github.event.pull_request.user.login }} != ${{ secrets.RM_USERNAME }} ]]; then
-		  fi
-
-   
                 fi
 		
 		
