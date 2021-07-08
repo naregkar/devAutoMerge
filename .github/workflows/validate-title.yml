@@ -41,8 +41,8 @@ jobs:
                   
                 else
                   contentMaster=$(curl \
-		                              -H "Accept: application/vnd.github.v3+json" \
-		                              https://api.github.com/repos/naregkar/devAutoMerge/contents/.github/ADMIN | jq -r '.content')
+		  		-H "Accept: application/vnd.github.v3+json" \
+				https://api.github.com/repos/naregkar/devAutoMerge/contents/.github/ADMIN | jq -r '.content')
 
                   echo "MasterVersion=$(echo $contentMaster | base64 -d)" >> $GITHUB_ENV   
 
