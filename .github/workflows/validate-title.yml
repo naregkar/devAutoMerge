@@ -40,8 +40,7 @@ jobs:
                   echo "JiraId=$jira_id" >> $GITHUB_ENV
                   
                 else
-                fi
-		
+                fi	
       - name: Read the version file from the master branch
         if: github.event_name == 'pull_request'
         run : |
