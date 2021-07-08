@@ -48,4 +48,8 @@ jobs:
                   echo "JiraId=$jira_id" >> $GITHUB_ENV
                   
                 else
+                  echo 'PR Title does not comply with the required pattern - [PW-xxxx]'
+                  
+                  echo 'list:' ${{ env.JiraId }}
+                  
                 fi
