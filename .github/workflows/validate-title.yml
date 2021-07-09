@@ -31,7 +31,7 @@ jobs:
                echo "My array: ${myarray[@]}"
                echo "Number of elements in the array: ${#myarray[@]}"
                
-               if [[ " ${myarray[*]} " == *" naregkar1234 "* ]]; then
+               if [[ " ${myarray[*]} " == *" ${{ github.event.pull_request.user.login }} "* ]]; then
                  echo "myarray contains naregkar"
                fi
              
