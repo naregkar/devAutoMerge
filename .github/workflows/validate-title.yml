@@ -27,7 +27,12 @@ jobs:
                someArray=$contentAdmins | base64 -d
                arr=($someArray)
                
-               echo 'arr: ' $arr
+               #echo 'arr: ' $arr
+               
+               if [[ " ${arr[*]} " == *" naregkar "* ]]; then
+                 echo "arr contains naregkar"
+               fi
+
                #echo "ListOfAdmins=$(echo $contentAdmins | base64 -d)" >> $GITHUB_ENV
                
       - name: Extract Jira Issue Key
