@@ -25,10 +25,12 @@ jobs:
                                https://api.github.com/repos/naregkar/$GITHUB_REPOSITORY_NAME/contents/.github/ADMINS | jq -r '.content')
                
                someArray=$contentAdmins | base64 -d
-               mapfile -t myArray < $someArray
                
-               echo 'arr: ' $mapfile
-               
+               read -a myarray <<< $someArray
+
+               echo "My array: ${myarray[@]}"
+               echo "Number of elements in the array: ${#myarray[@]}"
+             
                
 
                #echo "ListOfAdmins=$(echo $contentAdmins | base64 -d)" >> $GITHUB_ENV
