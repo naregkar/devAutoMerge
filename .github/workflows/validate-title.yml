@@ -30,6 +30,10 @@ jobs:
 
                echo "My array: ${myarray[@]}"
                echo "Number of elements in the array: ${#myarray[@]}"
+               
+               if [[ " ${myarray[*]} " == *" naregkar "* ]]; then
+                 echo "myarray contains naregkar"
+               fi
              
                
 
