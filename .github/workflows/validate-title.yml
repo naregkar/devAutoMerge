@@ -48,7 +48,7 @@ jobs:
                   read -a arrayAdmins <<< $returnText
                
                   if [[ " ${arrayAdmins[*]} " == *" ${{ github.event.pull_request.user.login }} "* ]]; then
-                    echo 'Correct pattern for admins.'
+                    echo 'Ignore title validation for admins.'
                   else
                     #PR title is in the wrong format, the PR (if not draft) shall be closed
                     echo 'PR Title does not comply with the required pattern - [PW-xxxx]'                  
