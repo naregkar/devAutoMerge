@@ -56,7 +56,7 @@ jobs:
                     curl \
                           -X PATCH \
                           -H "Accept: application/vnd.github.v3+json" \
-                          -H 'authorization: token ${{ secrets.ADMIN_TOKEN }}' \
+                          -H 'authorization: token ${{ secrets.TOKEN_GITHUB }}' \
                           https://api.github.com/repos/naregkar/$GITHUB_REPOSITORY_NAME/pulls/$GITHUB_PR_NUMBER \
                           -d '{"state": "closed"}'
                   fi
