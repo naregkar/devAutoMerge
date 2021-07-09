@@ -25,13 +25,11 @@ jobs:
                                https://api.github.com/repos/naregkar/$GITHUB_REPOSITORY_NAME/contents/.github/ADMINS | jq -r '.content')
                
                someArray=$contentAdmins | base64 -d
-               arr=($someArray)
+               mapfile -t myArray < $someArray
                
-               #echo 'arr: ' $arr
+               echo 'arr: ' $mapfile
                
-               if [[ " ${arr[*]} " == *" naregkar "* ]]; then
-                 echo "arr contains naregkar"
-               fi
+               
 
                #echo "ListOfAdmins=$(echo $contentAdmins | base64 -d)" >> $GITHUB_ENV
                
