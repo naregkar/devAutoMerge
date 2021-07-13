@@ -47,6 +47,8 @@ jobs:
                
                   read -a arrayAdmins <<< $returnText
                
+                  echo 'user: ' ${{ github.event.pull_request.user.login }}
+                  
                   if [[ " ${arrayAdmins[*]} " == *" ${{ github.event.pull_request.user.login }} "* ]]; then
                     echo 'Ignore title validation for admins.'
                   else
