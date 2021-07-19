@@ -21,6 +21,6 @@ jobs:
 
       - name: Ping the site
         run: |
-              pingSite=$(curl -Is https://google.com | head -1)
+              pingSite=$(curl -Is https://pw-11043-save-project-ve.picsartstage2.com | head -1)
               
               echo 'ping:' $pingSite
