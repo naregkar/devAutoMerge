@@ -16,38 +16,11 @@ jobs:
     
     steps:
     
-      - name: Extract branch name
-        shell: bash
-        run: echo "BRANCH_NAME=$(echo ${GITHUB_REF#refs/heads/} | awk '{print tolower($0)}'| sed -E -e 's/\.|_|\//-/g')" >> $GITHUB_ENV; echo "SHA8=$(echo ${GITHUB_SHA::8})" >> $GITHUB_ENV
-      
       - name: Extract pull request's head branch
-        if: github.event_name == 'pull_request'
-        run: echo "BRANCH_NAME=$(echo ${GITHUB_HEAD_REF#refs/heads/} | awk '{print tolower($0)}'| sed -E -e 's/\.|_|\//-/g')" >> $GITHUB_ENV; echo "SHA8=$(echo ${GITHUB_SHA::8})" >> $GITHUB_ENV
-      
-      - name: Test
-        run: echo "${BRANCH_NAME}"
-      
-      - name: some echoes
+        run: echo "BRANCH_NAME=$(echo ${{ github.event.pull_request.head.ref }} | awk '{print tolower($0)}'| sed -E -e 's/\.|_|\//-/g')" >> $GITHUB_ENV;
+
+      - name: Ping the site
         run: |
-              echo 'base ref: ' ${{ github.base_ref }}
-              echo 'master to be merged'
-              echo 'headsha: ' ${{ github.event.pull_request.head.sha }}
-              echo 'repo: ' ${GITHUB_REPOSITORY}
+              pingSite=$(curl -Is https://google.com | head -1)
               
-              
-              targetBranch=${{ github.base_ref }}
-              echo 'targetBranch is: ' $targetBranch
-              
-              if [[ $targetBranch == 'release' ]]; then
-                echo 'inside iffff, release'
-              else
-              
-                echo 'master part'
-                
-                if [[ 1 == 1 ]]; then
-                  echo 'hey'
-                fi
-                
-                
-              fi
-                
+              echo 'ping:' $pingSite
