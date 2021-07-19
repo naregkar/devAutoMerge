@@ -23,6 +23,8 @@ jobs:
         run: |
               pingSite=$(curl -Is https://pw-11043-save-project-ve.picsartstage2.com | head -1)
               
+              pingSite=$pingSite | xargs
+              
               echo 'pingSite:'$pingSite | xargs
               
               if [[ "$pingSite" == "HTTP/2 200" ]]; then
