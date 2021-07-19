@@ -22,7 +22,9 @@ jobs:
       - name: Ping the site
         run: |
               pingSite=$(curl -Is https://pw-11043-save-project-ve.picsartstage2.com | head -1)
-              
+             
+              echo 'pingSite Unparsed:'$pingSite
+             
               pingSite=$pingSite | xargs
               
               echo 'pingSite:'$pingSite | xargs
