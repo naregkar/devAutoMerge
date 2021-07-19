@@ -23,7 +23,7 @@ jobs:
         run: |
               pingSite=$(curl -Is https://pw-11043-save-project-ve.picsartstage2.com | head -1)
               
-              echo 'pingSite:' $pingSite
+              echo 'pingSite:'$pingSite'continuation'
               
               if [[ "$pingSite" == "HTTP/2 200" ]]; then
                 echo 'site is accessible'
