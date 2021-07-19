@@ -21,11 +21,9 @@ jobs:
 
       - name: Ping the site
         run: |
-              pingSiteUnparsed=$(curl -Is https://pw-11043-save-project-ve.picsartstage2.com | head -1)
+              pingSite=$(curl -Is https://pw-11043-save-project-ve.picsartstage2.com | head -1)
               
-              echo 'pingSiteUnparsed:'$pingSiteUnparsed | xargs
-              #pingSite=${pingSiteUnparsed%%*( )}
-              #echo 'pingSite:'$pingSite
+              echo 'pingSite:'$pingSiteUnparsed | xargs
               
               if [[ "$pingSite" == "HTTP/2 200" ]]; then
                 echo 'site is accessible'
