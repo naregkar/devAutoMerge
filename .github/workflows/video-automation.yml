@@ -25,7 +25,7 @@ jobs:
              
               echo 'pingSite Unparsed:'$pingSite
              
-              pingSite=$pingSite | xargs
+              pingSite=$(echo $pingSite | xargs)
               
               echo 'pingSite:'$pingSite | xargs
               
