@@ -22,8 +22,8 @@ jobs:
       - name: Ping the site
         run: |
         
-              branchNameInside='www.google'
-              siteURL="https://${branchNameInside}.com"
+              branchNameInside='pw-13966-font-size'
+              siteURL="https://${branchNameInside}-ve.picsartstage2.com"
               echo 'siteURL:' $siteURL
               pingSite=$(curl -Is $siteURL | head -1)
                       
