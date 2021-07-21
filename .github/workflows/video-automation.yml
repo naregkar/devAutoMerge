@@ -23,7 +23,7 @@ jobs:
         run: |
         
               branchNameInside='www.google'
-              siteURL='https://${branchNameInside}.com'
+              siteURL="https://${branchNameInside}.com"
               echo 'siteURL:' $siteURL
               #pingSite=$(curl -Is https://pw-11043-save-project-ve.picsartstage2.com | head -1)
                       
