@@ -22,7 +22,7 @@ jobs:
       - name: Ping the site
         run: |
         
-              siteURL='https://'${{ env.BRANCH_NAME }}'.com'
+              siteURL='https://${{ env.BRANCH_NAME }}.com'
               echo 'siteURL:' $siteURL
               #pingSite=$(curl -Is https://pw-11043-save-project-ve.picsartstage2.com | head -1)
                       
