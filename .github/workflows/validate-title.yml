@@ -41,6 +41,8 @@ jobs:
                   jira_id=${jira_id:1}
                   echo "JiraId=$jira_id" >> $GITHUB_ENV
                   
+                  exit 1
+                  
                 else
                   
                   contentAdmins=$(curl \
