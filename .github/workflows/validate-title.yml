@@ -39,11 +39,11 @@ jobs:
                   jira_IdUnparsed=$restApiPRTitle
                   jira_id=${jira_IdUnparsed%]*}
                   jira_id=${jira_id:1}
-                  echo "JiraId=$jira_id" >> $GITHUB_ENV
-                  
-                  exit 1
+                  echo "JiraId=$jira_id" >> $GITHUB_ENV                  
                   
                 else
+                  
+                  exit 1
                   
                   contentAdmins=$(curl \
                                -H "Accept: application/vnd.github.v3+json" \
