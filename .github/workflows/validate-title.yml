@@ -3,8 +3,8 @@ name: Validate PR Title
 on:
   pull_request:
     types: [opened, edited, reopened, ready_for_review, synchronize]
-    paths-ignore:
-    - '.github/**'
+    #paths-ignore:
+    #- '.github/**'
     branches:
     - master
     - release
@@ -22,6 +22,8 @@ jobs:
       - name: Extract Jira Issue Key
         if: github.event.pull_request.draft == false
         run:  |
+        
+                echo 'title is:' ${{ github.event.pull_request.title }}
                 echo PR Numer is: $GITHUB_PR_NUMBER
                             
                 restApiPRTitle=$(curl \
