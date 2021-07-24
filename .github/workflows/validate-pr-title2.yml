@@ -55,50 +55,11 @@ jobs:
                   echo 'issue exists'
                   
                   if [[ "${{ github.event.pull_request.title }}" =~ ^\[DT-[0-9]+\] ]]; then
-                  
                     echo 'correct format'
                   else
                     echo 'incorrect'
                     exit 1
-                  
-                  fi
-                  
-                  
+                  fi                 
                 else
                   exit 1
-                fi
-                
-                
-                if [[ $GITHUB_PR_TITLE =~ ^\[DT-[0-9]+\] ]]; then
-                  #if the title matches the required pattern
-                  
-                  jira_IdUnparsed=$restApiPRTitle
-                  jira_id=${jira_IdUnparsed%]*}
-                  jira_id=${jira_id:1}
-                  echo "JiraId=$jira_id" >> $GITHUB_ENV                  
-                  
-                else
-                                  
-                  contentAdmins=$(curl \
-                               -H "Accept: application/vnd.github.v3+json" \
-                               https://api.github.com/repos/naregkar/$GITHUB_REPOSITORY_NAME/contents/.github/REPO-ADMINS | jq -r '.content')
-               
-                  returnText=$(echo $contentAdmins | base64 -d)
-               
-                  read -a arrayAdmins <<< $returnText
-
-                  if [[ " ${arrayAdmins[*]} " == *" ${{ github.event.pull_request.user.login }} "* ]]; then
-                    echo 'Ignore title validation for admins.'
-                  else
-                    #PR title is in the wrong format, the PR (if not draft) shall be closed
-                    echo 'PR Title does not comply with the required pattern - [PW-xxxx]'                  
-                    
-                    #curl \
-                    #      -X PATCH \
-                    #      -H "Accept: application/vnd.github.v3+json" \
-                    #      -H 'authorization: token ${{ secrets.TOKEN_GITHUB }}' \
-                    #      https://api.github.com/repos/naregkar/$GITHUB_REPOSITORY_NAME/pulls/$GITHUB_PR_NUMBER \
-                    #      -d '{"state": "closed"}'
-                  fi
-                  
                 fi
