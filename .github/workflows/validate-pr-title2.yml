@@ -32,7 +32,7 @@ jobs:
         id: find
         uses: atlassian/gajira-find-issue-key@master
         with:
-          string: "$GITHUB_PR_TITLE" #${{ github.head_ref }} ${{ github.event.head_commit.message }}"
+          string: "${{ github.event.pull_request.title }}" #${{ github.head_ref }} ${{ github.event.head_commit.message }}"
           from: "" 
           
       #- name: Checking the issue
