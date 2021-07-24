@@ -35,22 +35,28 @@ jobs:
           string: "$GITHUB_PR_TITLE" #${{ github.head_ref }} ${{ github.event.head_commit.message }}"
           from: "" 
           
-      - name: Checking the issue
-        if: steps.find.outputs.issue == ''
-        uses: mshick/add-pr-comment@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.TOKEN_GITHUB }}
-        with:
-          message: ":red_circle: **Can not find the issue in JIRA**"     
+      #- name: Checking the issue
+      #  if: steps.find.outputs.issue == ''
+      #  uses: mshick/add-pr-comment@v1
+      #  env:
+      #    GITHUB_TOKEN: ${{ secrets.TOKEN_GITHUB }}
+      #  with:
+      #    message: ":red_circle: **Can not find the issue in JIRA**"     
           
           
           
       - name: Extract Jira Issue Key
         if: github.event.pull_request.draft == false
         run:  |
-                
+            
                 echo 'Entered title is:' $GITHUB_PR_TITLE
                 echo 'commit: ' ${{ github.event.head_commit.message }}
+                
+                outputPrevious=${{ steps.find.outputs.issue }}
+                echo 'outputPrevious: ' $outputPrevious
+                
+                #if [[  == '' ]]; then
+                #fi
                 
                 
                 if [[ $GITHUB_PR_TITLE =~ ^\[DT-[0-9]+\] ]]; then
