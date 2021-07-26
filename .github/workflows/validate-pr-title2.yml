@@ -54,7 +54,7 @@ jobs:
                 if [[ $outputPrevious -ne '' ]]; then
                   echo 'issue exists'
                   
-                  if [[ "${{ github.event.pull_request.title }}" =~ ^\[DT-[0-9]+\] ]]; then
+                  if [[ "${{ github.event.pull_request.title }}" =~ ^\DT-[0-9]+\ ]]; then
                     echo 'correct format'
                   else
                     echo 'incorrect'
