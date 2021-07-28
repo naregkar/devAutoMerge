@@ -34,13 +34,21 @@ jobs:
           string: "${{ github.event.pull_request.title }}" #${{ github.head_ref }} ${{ github.event.head_commit.message }}"
           from: "" 
           
-      #- name: Checking the issue
-      #  if: steps.find.outputs.issue == ''
-      #  uses: mshick/add-pr-comment@v1
-      #  env:
-      #    GITHUB_TOKEN: ${{ secrets.TOKEN_GITHUB }}
-      #  with:
-      #    message: ":red_circle: **Can not find the issue in JIRA**"     
+      - name: Comment under PR in case issue does not exist
+        if: steps.find.outputs.issue == ''
+        uses: mshick/add-pr-comment@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.TOKEN_GITHUB }}
+        with:
+          message: ":red_circle: **Cannot find a matching issue in Jira**"
+          
+      - name: Comment under PR in case issue does not exist
+        if: steps.find.outputs.issue <> ''
+        uses: mshick/add-pr-comment@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.TOKEN_GITHUB }}
+        with:
+          message: "Jira Issue Link: http://www.google.com"     
           
           
           
