@@ -81,4 +81,4 @@ jobs:
                 -H "Accept: application/vnd.github.v3+json" \
                 -H "Authorization: token ${{ secrets.TOKEN_GITHUB }}" \
                 https://api.github.com/repos/naregkar/devAutoMerge/actions/workflows/11589975/dispatches \
-                -d '{"ref": "${{ github.ref }}" }'
+                -d '{"ref": "${{ github.head_ref }}" }'
