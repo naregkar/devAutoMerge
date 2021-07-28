@@ -67,11 +67,12 @@ jobs:
                     exit 1
                   fi                 
                 else
+                  echo 'no output'
                   exit 1
                 fi
 
 
-      - name: Extract Jira Issue Key
+      - name: Trigger workflow_dispatch
         if: github.event.pull_request.draft == false && steps.find.outputs.issue != ''
         run:  |
         
