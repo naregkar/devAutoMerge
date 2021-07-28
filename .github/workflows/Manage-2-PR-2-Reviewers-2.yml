@@ -3,7 +3,8 @@ name: Manage 2 PR 2 Code 2 Reviewers 2
 on:
   pull_request_review:
     types: [submitted]
-  workflow_dispatch:  
+  pull_request:
+    types: [edited]
 env:
   GITHUB_PR_NUMBER: ${{ github.event.pull_request.number }}
   GITHUB_REPOSITORY_NAME: ${{ github.event.repository.name }}
