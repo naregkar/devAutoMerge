@@ -72,7 +72,7 @@ jobs:
 
 
       - name: Extract Jira Issue Key
-        if: github.event.pull_request.draft == false
+        if: github.event.pull_request.draft == false && steps.find.outputs.issue != ''
         run:  |
         
               curl -i \
