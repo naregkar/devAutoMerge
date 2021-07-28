@@ -56,6 +56,7 @@ jobs:
         if: github.event.pull_request.draft == false
         run:  |
             
+                echo 'base URL: ' ${{ env.JIRA_BASE_URL }}
                 outputPrevious=${{ steps.find.outputs.issue }}
                 echo 'outputPrevious:' $outputPrevious
 
