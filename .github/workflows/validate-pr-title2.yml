@@ -42,22 +42,18 @@ jobs:
         with:
           message: ":red_circle: **Cannot find a matching issue in Jira**"
           
-      - name: Comment under PR in case issue does not exist
+      - name: Comment under the PR the Jira Issue link
         if: steps.find.outputs.issue != ''
         uses: mshick/add-pr-comment@v1
         env:
           GITHUB_TOKEN: ${{ secrets.TOKEN_GITHUB }}
         with:
-          message: "<b><a href=\"${{ secrets.JIRA_BASE_URL }}/browse/${{ steps.find.outputs.issue }}\" target=\"_blank\">${{ secrets.JIRA_BASE_URL }}/browse/${{ steps.find.outputs.issue }}</a></b>"
-          #message: "Jira Issue Link: ${{ secrets.JIRA_BASE_URL }}/browse/${{ steps.find.outputs.issue }}"     
-          
-          
-          
+          message: "Jira Issue Link: ${{ secrets.JIRA_BASE_URL }}/browse/${{ steps.find.outputs.issue }}"     
+                           
       - name: Extract Jira Issue Key
         if: github.event.pull_request.draft == false
         run:  |
-            
-                echo 'base URL: ' ${{ secrets.JIRA_BASE_URL }}
+                
                 outputPrevious=${{ steps.find.outputs.issue }}
                 echo 'outputPrevious:' $outputPrevious
 
