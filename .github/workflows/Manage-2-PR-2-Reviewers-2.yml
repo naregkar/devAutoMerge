@@ -47,6 +47,7 @@ jobs:
               fi                         
       
       - name: Assess the PR Reviewers Count
+        if: steps.find.outputs.issue != ''
         run:  |
                 
                 restApiGETGitHubReviewersDetails=$(curl \
