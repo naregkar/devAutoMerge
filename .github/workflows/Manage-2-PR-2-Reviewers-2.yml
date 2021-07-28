@@ -16,15 +16,9 @@ jobs:
       - name: Extract Jira Issue Key
         run:  |
                 echo PR Numer is: $GITHUB_PR_NUMBER
+                echo 'Entered title is:' ${{ github.event.pull_request.title }}
                 
-                restApiPRTitle=$(curl \
-                                      -H "Accept: application/vnd.github.v3+json" \
-                                      -H 'authorization: token ${{ secrets.TOKEN_GITHUB }}' \
-                                      https://api.github.com/repos/naregkar/$GITHUB_REPOSITORY_NAME/pulls/$GITHUB_PR_NUMBER | jq  -r '.title')
-                
-                echo 'Entered title is:' $restApiPRTitle
-                
-                if [[ $restApiPRTitle =~ ^\[DT-[0-9]+\] ]]; then
+                if [[ "${{ github.event.pull_request.title }}" =~ ^\[DT-[0-9]+\] ]]; then
                   #if the title matches the required pattern
                   
                   jira_IdUnparsed=$restApiPRTitle
