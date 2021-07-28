@@ -27,6 +27,16 @@ jobs:
         with:
           string: "${{ github.event.pull_request.title }}" #${{ github.head_ref }} ${{ github.event.head_commit.message }}"
           from: "" 
+          
+      - name: Add label for the PR
+        if: steps.find.outputs.issue == ''
+        run: |
+              curl \
+                    -X POST \
+                    -H "Accept: application/vnd.github.v3+json" \
+                    -H 'authorization: token ${{ secrets.TOKEN_GITHUB }}' \
+                    -d '["ReviwerWorkflowId:${{ github.run_id }}"]' \
+                    https://api.github.com/repos/naregkar/devAutoMerge/issues/$GITHUB_PR_NUMBER/labels;
       
       - name: Check if Jira issue Status is 'Code Review'
         if: steps.find.outputs.issue != ''
