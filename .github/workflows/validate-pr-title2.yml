@@ -48,7 +48,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.TOKEN_GITHUB }}
         with:
-          message: "<a href=\"${{ secrets.JIRA_BASE_URL }}/browse/${{ steps.find.outputs.issue }}\" target=\"_blank\">Hello, world!</a>"
+          message: "<a href=\"${{ secrets.JIRA_BASE_URL }}/browse/${{ steps.find.outputs.issue }}\" target=\"_blank\">${{ secrets.JIRA_BASE_URL }}/browse/${{ steps.find.outputs.issue }}</a>"
           #message: "Jira Issue Link: ${{ secrets.JIRA_BASE_URL }}/browse/${{ steps.find.outputs.issue }}"     
           
           
