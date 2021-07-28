@@ -48,7 +48,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.TOKEN_GITHUB }}
         with:
-          message: "Jira Issue Link: http://www.google.com"     
+          message: "Jira Issue Link: ${JIRA_BASE_URL}/${{ steps.find.outputs.issue }}"     
           
           
           
