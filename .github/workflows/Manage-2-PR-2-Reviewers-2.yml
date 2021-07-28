@@ -3,8 +3,6 @@ name: Manage 2 PR 2 Code 2 Reviewers 2
 on:
   pull_request_review:
     types: [submitted]
-  pull_request:
-    types: [edited]
 env:
   GITHUB_PR_NUMBER: ${{ github.event.pull_request.number }}
   GITHUB_REPOSITORY_NAME: ${{ github.event.repository.name }}
@@ -15,28 +13,25 @@ jobs:
     
     steps:
       
-      - name: Extract Jira Issue Key
-        run:  |
-                echo PR Numer is: $GITHUB_PR_NUMBER
-                echo 'Entered title is:' ${{ github.event.pull_request.title }}
-                
-                if [[ "${{ github.event.pull_request.title }}" =~ ^\[DT-[0-9]+\] ]]; then
-                  #if the title matches the required pattern
-                  
-                  jira_IdUnparsed=$restApiPRTitle
-                  jira_id=${jira_IdUnparsed%]*}
-                  jira_id=${jira_id:1}
-                  echo "JiraId=$jira_id" >> $GITHUB_ENV
-                  
-                else
-                  echo 'PR Title does not comply with the required pattern - [PW-xxxx]'                  
-                  exit 1
-                fi
+      - name: Login to JIRA
+        uses: atlassian/gajira-login@master
+        env:
+          JIRA_BASE_URL: ${{ secrets.JIRA_BASE_URL }}
+          JIRA_USER_EMAIL: ${{ secrets.JIRA_USER_EMAIL }}
+          JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
+      
+      - name: Find Jira Issue Id in commit messages
+        id: find
+        uses: atlassian/gajira-find-issue-key@master
+        with:
+          string: "${{ github.event.pull_request.title }}" #${{ github.head_ref }} ${{ github.event.head_commit.message }}"
+          from: "" 
       
       - name: Check if Jira issue Status is 'Code Review'
+        if: steps.find.outputs.issue != ''
         run: |
               restApiGETJiraIssueDetails=$(curl --request GET \
-                  --url 'https://naregkar.atlassian.net/rest/api/3/issue/${{ env.JiraId }}/' \
+                  --url '${{ secrets.JIRA_BASE_URL }}/rest/api/3/issue/${{ steps.find.outputs.issue }}/' \
                   --user '${{ secrets.JIRA_USER_EMAIL }}:${{ secrets.JIRA_API_TOKEN }}' \
                   --header 'Accept: application/json');
                   
@@ -47,7 +42,7 @@ jobs:
 
               
               if [[ ${jira_Issue_Status} != "Code Review" ]]; then
-                echo 'The Jira status is' $jira_Issue_Status 'for Issue: ${{ env.JiraId }}. Cannot proceed when the status is not set to Code Review.'
+                echo 'The Jira status is' $jira_Issue_Status 'for Issue: if: steps.find.outputs.issue != ''. Cannot proceed when the status is not set to Code Review.'
                 exit 1
               fi                         
       
@@ -73,7 +68,7 @@ jobs:
                     
                     #assign Jira Issue to a certain person/unassign depends on the team
                     curl --request PUT \
-                      --url 'https://naregkar.atlassian.net/rest/api/3/issue/${{ env.JiraId }}/assignee' \
+                      --url '${{ secrets.JIRA_BASE_URL }}/rest/api/3/issue/${{ steps.find.outputs.issue }}/assignee' \
                       --user '${{ secrets.JIRA_USER_EMAIL }}:${{ secrets.JIRA_API_TOKEN }}' \
                       --header 'Accept: application/json' \
                       --header 'Content-Type: application/json' \
@@ -84,7 +79,7 @@ jobs:
                     #Change the Jira issue Status to QA Open
                     curl -D- -u ${{ secrets.JIRA_USER_EMAIL }}:${{ secrets.JIRA_API_TOKEN }} \
                       -X POST --data '{"transition":{"id":"61"}}' \
-                      -H "Content-Type: application/json" https://naregkar.atlassian.net/rest/api/3/issue/${{ env.JiraId }}/transitions
+                      -H "Content-Type: application/json" ${{ secrets.JIRA_BASE_URL }}/rest/api/3/issue/${{ steps.find.outputs.issue }}/transitions
          
                 fi
                 
