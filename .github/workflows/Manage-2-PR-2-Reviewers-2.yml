@@ -12,6 +12,10 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
+    
+      - name: title
+        run:  |
+                echo 'title: ' ${{ github.event.pull_request.title }}
       
       - name: Login to JIRA
         uses: atlassian/gajira-login@master
