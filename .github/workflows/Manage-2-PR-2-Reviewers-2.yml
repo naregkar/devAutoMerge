@@ -56,12 +56,19 @@ jobs:
                                 
                labelNameExtracted=$(echo $restApiGetLabels | jq -r '.[] | select(.name | contains("ReviwerWorkflowId")) | .name');           
                
-               curl \
+               if [ ! -z "$labelNameExtracted" ]; then
+               
+                  echo 'delete'
+                  
+                  curl \
                   -X DELETE \
                   -H "Accept: application/vnd.github.v3+json" \
                   -H 'authorization: token ${{ secrets.TOKEN_GITHUB }}' \
                   https://api.github.com/repos/naregkar/devAutoMerge/issues/$GITHUB_PR_NUMBER/labels/$labelNameExtracted
-      
+               else
+                  echo 'nothing to delete'
+               fi
+                    
       - name: Check if Jira issue Status is 'Code Review'
         if: steps.find.outputs.issue != ''
         run: |
