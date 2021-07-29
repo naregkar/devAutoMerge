@@ -15,7 +15,12 @@ jobs:
     
       - name: title
         run:  |
-                echo 'title: ' ${{ github.event.pull_request.title }}
+                restApiPRTitle=$(curl \
+                                      -H "Accept: application/vnd.github.v3+json" \
+                                      -H 'authorization: token ${{ secrets.TOKEN_GITHUB }}' \
+                                      https://api.github.com/repos/naregkar/$GITHUB_REPOSITORY_NAME/pulls/$GITHUB_PR_NUMBER | jq  -r '.title')
+                
+                echo "prTitlefromAPI=$restApiPRTitle" >> $GITHUB_ENV
       
       - name: Login to JIRA
         uses: atlassian/gajira-login@master
@@ -28,7 +33,7 @@ jobs:
         id: find
         uses: atlassian/gajira-find-issue-key@master
         with:
-          string: "${{ github.event.pull_request.title }}" #${{ github.head_ref }} ${{ github.event.head_commit.message }}"
+          string: "${{ env.prTitlefromAPI }}" #${{ github.head_ref }} ${{ github.event.head_commit.message }}"
           from: "" 
           
       - name: Add label for the PR
