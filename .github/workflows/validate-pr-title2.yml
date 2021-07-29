@@ -90,8 +90,8 @@ jobs:
                echo 'workflowId:' $workflowId
                
                
-               #curl \
-               # -X POST \
-               # -H "Accept: application/vnd.github.v3+json" \
-               # -H "Authorization: token ${{ secrets.TOKEN_GITHUB }}" \
-               # https://api.github.com/repos/naregkar/devAutoMerge/actions/runs/$workflowId/rerun
+               curl \
+                -X POST \
+                -H "Accept: application/vnd.github.v3+json" \
+                -H "Authorization: token ${{ secrets.TOKEN_GITHUB }}" \
+                https://api.github.com/repos/naregkar/devAutoMerge/actions/runs/$workflowId/rerun
