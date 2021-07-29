@@ -56,7 +56,7 @@ jobs:
                                 
                labelNameExtracted=$(echo $restApiGetLabels | jq -r '.[] | select(.name | contains("ReviwerWorkflowId")) | .name');           
                
-               if [ ! -z "$labelNameExtracted" ]; then
+               if [ "$labelNameExtracted" != "" ]; then
                
                   echo 'delete'
                   
