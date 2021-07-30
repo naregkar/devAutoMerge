@@ -122,4 +122,4 @@ jobs:
             SLACK_CHANNEL: general
         uses: Ilshidur/action-slack@2.0.2
         with:
-            args: "${{ github.event.pull_request.user.login }} opened a new <a href=\"http://www.google.com\">PR</a>. Please review."
+            args: "${{ github.event.pull_request.user.login }} opened a new PR: http://www.google.com  Please review."
