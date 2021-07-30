@@ -115,4 +115,11 @@ jobs:
                    -X POST --data '{"transition":{"id":"51"}}' \
                    -H "Content-Type: application/json" ${{ secrets.JIRA_BASE_URL }}/rest/api/3/issue/${{ needs.Validate-2-PR-Title-2.outputs.outputIssueId }}/transitions
 
-
+      - name: Slack notification
+        env:
+            SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+            SLACK_USERNAME: WebAutoMerger
+            SLACK_CHANNEL: general
+        uses: Ilshidur/action-slack@2.0.2
+        with:
+            args: "${{ github.event.pull_request.user.login }} opened a new PR. Please review."
