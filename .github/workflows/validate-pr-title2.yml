@@ -109,5 +109,10 @@ jobs:
         run: |
               echo 'inside job 2'
               echo ${{ needs.Validate-2-PR-Title-2.outputs.outputIssueId }}
+              
+              #Change the Jira issue Status to QA Open
+              curl -D- -u ${{ secrets.JIRA_USER_EMAIL }}:${{ secrets.JIRA_API_TOKEN }} \
+                   -X POST --data '{"transition":{"id":"51"}}' \
+                   -H "Content-Type: application/json" ${{ secrets.JIRA_BASE_URL }}/rest/api/3/issue/${{ needs.Validate-2-PR-Title-2.outputs.outputIssueId }}/transitions
 
 
