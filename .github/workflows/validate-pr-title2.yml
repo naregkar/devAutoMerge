@@ -57,7 +57,7 @@ jobs:
         if: github.event.pull_request.draft == false
         run:  |
         
-              
+                echo 'github.event_name:' ${{ github.event_name }}
                 
                 outputPrevious=${{ steps.find.outputs.issue }}
                 echo 'outputPrevious:' $outputPrevious
@@ -78,7 +78,7 @@ jobs:
 
 
       - name: Trigger to re-run
-        if: github.event.pull_request.draft == false && steps.find.outputs.issue != ''
+        if: github.event.pull_request.draft == false && steps.find.outputs.issue != '' && github.event_name != 'openened'
         run:  |
         
                restApiGetLabels=$(curl \
