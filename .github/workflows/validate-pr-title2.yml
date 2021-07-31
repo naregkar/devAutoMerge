@@ -48,8 +48,14 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.TOKEN_GITHUB }}
         with:
-          message: ":red_circle: **Cannot find a matching issue in Jira**"
-          
+          message: ":red_circle: **Cannot find a matching issue in Jira**"              
+      
+      - name: Stop workflow in case no matching
+        if: steps.find.outputs.issue == ''
+        run:  |
+                echo 'No matching issue'
+                exit 1
+      
       - name: Comment under the PR the Jira Issue link
         if: steps.find.outputs.issue != ''
         uses: mshick/add-pr-comment@v1
