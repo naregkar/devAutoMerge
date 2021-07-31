@@ -59,7 +59,7 @@ jobs:
           message: "Jira Issue Link: ${{ secrets.JIRA_BASE_URL }}/browse/${{ steps.find.outputs.issue }}"     
                            
       - name: Extract Jira Issue Key
-        if: github.event.pull_request.draft == false
+        if: steps.find.outputs.issue != '' && github.event.pull_request.draft == false
         run:  |
         
                 echo 'github.event:' ${{ github.event.action }}
