@@ -22,6 +22,11 @@ jobs:
     
     steps:
     
+      - name: Dump GitHub context
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: echo "$GITHUB_CONTEXT"
+    
       - name: Login to JIRA
         uses: atlassian/gajira-login@master
         env:
