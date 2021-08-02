@@ -45,6 +45,8 @@ jobs:
                     -H 'authorization: token ${{ secrets.TOKEN_GITHUB }}' \
                     -d '["ReviwerWorkflowId:${{ github.run_id }}"]' \
                     https://api.github.com/repos/naregkar/devAutoMerge/issues/$GITHUB_PR_NUMBER/labels;
+                    
+              exit 1       
       
       - name: Remove re-run label
         if: steps.find.outputs.issue != ''
