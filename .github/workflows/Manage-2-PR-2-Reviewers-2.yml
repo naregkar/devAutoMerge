@@ -43,7 +43,7 @@ jobs:
                     -X POST \
                     -H "Accept: application/vnd.github.v3+json" \
                     -H 'authorization: token ${{ secrets.TOKEN_GITHUB }}' \
-                    -d '["ReviwerWorkflowId:${{ github.run_id }}"]' \
+                    -d '["ReviewerWorkflowId:${{ github.run_id }}"]' \
                     https://api.github.com/repos/naregkar/devAutoMerge/issues/$GITHUB_PR_NUMBER/labels;
                     
               exit 1       
@@ -56,7 +56,7 @@ jobs:
       #                          -H 'authorization: token ${{ secrets.TOKEN_GITHUB }}' \
       #                          https://api.github.com/repos/naregkar/devAutoMerge/issues/$GITHUB_PR_NUMBER/labels)
       #                          
-      #         labelNameExtracted=$(echo $restApiGetLabels | jq -r '.[] | select(.name | contains("ReviwerWorkflowId")) | .name');           
+      #         labelNameExtracted=$(echo $restApiGetLabels | jq -r '.[] | select(.name | contains("ReviewerWorkflowId")) | .name');           
       #         
       #         if [ "$labelNameExtracted" != "" ]; then
       #         
