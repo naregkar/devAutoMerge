@@ -137,10 +137,11 @@ jobs:
                                 -H "Authorization: token ${{ secrets.TOKEN_GITHUB }}" \
                                 https://api.github.com/repos/naregkar/devAutoMerge/issues/$GITHUB_PR_NUMBER/labels)
                                 
-               workflowIdExtracted=$(echo $restApiGetLabels | jq -r '.[] | select(.name | contains("ReviwerWorkflowId")) | .name');           
+               workflowIdExtracted=$(echo $restApiGetLabels | jq -r '.[] | select(.name | contains("ReviewerWorkflowId")) | .name');           
                
                if [ "$workflowIdExtracted" == "" ]; then
-                  
+                
+                  echo 'inside if'  
                   #Change the Jira issue Status to QA Open
                   curl -D- -u ${{ secrets.JIRA_USER_EMAIL }}:${{ secrets.JIRA_API_TOKEN }} \
                        -X POST --data '{"transition":{"id":"51"}}' \
