@@ -115,7 +115,7 @@ jobs:
                fi
 
                              
-  Transition-To-Code-Review:
+  Transition-To-Other-States:
     runs-on: ubuntu-latest
     needs: Validate-2-PR-Title-2
     
@@ -126,7 +126,7 @@ jobs:
           GITHUB_CONTEXT: ${{ toJson(github) }}
         run: echo "$GITHUB_CONTEXT"
     
-      - name: Change status to Code Review
+      - name: Change status
         if: github.event.pull_request.draft == false && needs.Validate-2-PR-Title-2.outputs.outputIssueId != '' #&& github.event_name != 'pull_request_review' && github.event.action != 'submitted'
         run: |
               
@@ -135,27 +135,35 @@ jobs:
                                 -H "Authorization: token ${{ secrets.TOKEN_GITHUB }}" \
                                 https://api.github.com/repos/naregkar/devAutoMerge/issues/$GITHUB_PR_NUMBER/labels)
                                 
-               workflowIdExtracted=$(echo $restApiGetLabels | jq -r '.[] | select(.name | contains("ReviewerWorkflowId")) | .name');           
+               codeReviewedLabel=$(echo $restApiGetLabels | jq -r '.[] | select(.name | contains("Code-Reviewed")) | .name'); 
                
-               if [ "$workflowIdExtracted" == "" ]; then
+               if [ "$codeReviewedLabel" == "" ]; then
                 
-                  echo 'no workflow id, then change status to code review'
+                  echo 'no code-reviewed label, then transition the Jira ticket to Code Review'
                   
                   #Change the Jira issue Status to Code Review
                   curl -D- -u ${{ secrets.JIRA_USER_EMAIL }}:${{ secrets.JIRA_API_TOKEN }} \
                        -X POST --data '{"transition":{"id":"51"}}' \
                        -H "Content-Type: application/json" ${{ secrets.JIRA_BASE_URL }}/rest/api/3/issue/${{ needs.Validate-2-PR-Title-2.outputs.outputIssueId }}/transitions
+               
                else
                
-                  echo 'delete'
-
-                  curl \
-                      -X DELETE \
-                      -H "Accept: application/vnd.github.v3+json" \
-                      -H 'authorization: token ${{ secrets.TOKEN_GITHUB }}' \
-                      https://api.github.com/repos/naregkar/devAutoMerge/issues/$GITHUB_PR_NUMBER/labels/$labelNameExtracted
+                  echo 'Code-Reviewed label exists'
+                  
+                  workflowIdExtracted=$(echo $restApiGetLabels | jq -r '.[] | select(.name | contains("ReviewerWorkflowId")) | .name');
                
+                  if [ "$workflowIdExtracted" == "" ]; then
+                    echo 'delete'
+
+                    curl \
+                        -X DELETE \
+                        -H "Accept: application/vnd.github.v3+json" \
+                        -H 'authorization: token ${{ secrets.TOKEN_GITHUB }}' \
+                        https://api.github.com/repos/naregkar/devAutoMerge/issues/$GITHUB_PR_NUMBER/labels/$labelNameExtracted
+               
+                  fi
                fi
+               
                
       #- name: Slack notification
       #  env:
