@@ -152,7 +152,7 @@ jobs:
                   
                   workflowIdExtracted=$(echo $restApiGetLabels | jq -r '.[] | select(.name | contains("ReviewerWorkflowId")) | .name');
                
-                  if [ "$workflowIdExtracted" == "" ]; then
+                  if [ "$workflowIdExtracted" != "" ]; then
                     echo 'delete'
 
                     curl \
