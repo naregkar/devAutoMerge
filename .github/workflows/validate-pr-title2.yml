@@ -141,15 +141,25 @@ jobs:
                
                if [ "$workflowIdExtracted" == "" ]; then
                 
-                  echo 'inside if'  
-                  #Change the Jira issue Status to QA Open
+                  echo 'inside if'
+                  echo 'no workflow id'
+                  
+                  #Change the Jira issue Status to In Progress
                   curl -D- -u ${{ secrets.JIRA_USER_EMAIL }}:${{ secrets.JIRA_API_TOKEN }} \
                        -X POST --data '{"transition":{"id":"51"}}' \
                        -H "Content-Type: application/json" ${{ secrets.JIRA_BASE_URL }}/rest/api/3/issue/${{ needs.Validate-2-PR-Title-2.outputs.outputIssueId }}/transitions
                else
-                  echo 'no workflow id'
-               fi  
+               
+                  echo 'delete'
 
+                  curl \
+                      -X DELETE \
+                      -H "Accept: application/vnd.github.v3+json" \
+                      -H 'authorization: token ${{ secrets.TOKEN_GITHUB }}' \
+                      https://api.github.com/repos/naregkar/devAutoMerge/issues/$GITHUB_PR_NUMBER/labels/$labelNameExtracted
+               
+               fi
+               
       #- name: Slack notification
       #  env:
       #      SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
