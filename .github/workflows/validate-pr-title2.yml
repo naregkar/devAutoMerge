@@ -129,8 +129,6 @@ jobs:
       - name: Change status to Code Review
         if: github.event.pull_request.draft == false && needs.Validate-2-PR-Title-2.outputs.outputIssueId != '' #&& github.event_name != 'pull_request_review' && github.event.action != 'submitted'
         run: |
-              echo 'inside job 2'
-              echo ${{ needs.Validate-2-PR-Title-2.outputs.outputIssueId }}
               
               restApiGetLabels=$(curl \
                                 -H "Accept: application/vnd.github.v3+json" \
@@ -141,10 +139,9 @@ jobs:
                
                if [ "$workflowIdExtracted" == "" ]; then
                 
-                  echo 'inside if'
-                  echo 'no workflow id'
+                  echo 'no workflow id, then change status to code review'
                   
-                  #Change the Jira issue Status to In Progress
+                  #Change the Jira issue Status to Code Review
                   curl -D- -u ${{ secrets.JIRA_USER_EMAIL }}:${{ secrets.JIRA_API_TOKEN }} \
                        -X POST --data '{"transition":{"id":"51"}}' \
                        -H "Content-Type: application/json" ${{ secrets.JIRA_BASE_URL }}/rest/api/3/issue/${{ needs.Validate-2-PR-Title-2.outputs.outputIssueId }}/transitions
