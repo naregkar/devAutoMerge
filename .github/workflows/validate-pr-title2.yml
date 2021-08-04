@@ -151,14 +151,27 @@ jobs:
                   workflowIdExtracted=$(echo $restApiGetLabels | jq -r '.[] | select(.name | contains("ReviewerWorkflowId")) | .name');
                
                   if [ "$workflowIdExtracted" != "" ]; then
-                    echo 'in case reviewer workflow id exists, delete it'
+                    
+                      echo 'workflowIdExtracted:' $workflowIdExtracted
+                      workflowId=$(echo $workflowIdExtracted| cut -d':' -f 2)
+                      echo 'workflowId:' $workflowId
+                      
+                      curl \
+                        -X POST \
+                        -H "Accept: application/vnd.github.v3+json" \
+                        -H "Authorization: token ${{ secrets.TOKEN_GITHUB }}" \
+                        https://api.github.com/repos/naregkar/devAutoMerge/actions/runs/$workflowId/rerun
 
-                    curl \
+
+                      echo 'delete it workflow re-run label'
+                      
+                      curl \
                         -X DELETE \
                         -H "Accept: application/vnd.github.v3+json" \
                         -H 'authorization: token ${{ secrets.TOKEN_GITHUB }}' \
                         https://api.github.com/repos/naregkar/devAutoMerge/issues/$GITHUB_PR_NUMBER/labels/$workflowIdExtracted
-               
+                  else
+                    echo 'no re-run'
                   fi
                fi
                
