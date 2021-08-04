@@ -88,32 +88,30 @@ jobs:
                 fi
 
 
-      - name: Trigger to re-run
-        if: github.event.pull_request.draft == false && steps.find.outputs.issue != '' && github.event.action != 'opened'
-        run:  |
-        
-               restApiGetLabels=$(curl \
-                                -H "Accept: application/vnd.github.v3+json" \
-                                -H "Authorization: token ${{ secrets.TOKEN_GITHUB }}" \
-                                https://api.github.com/repos/naregkar/devAutoMerge/issues/$GITHUB_PR_NUMBER/labels)
-                                
-               workflowIdExtracted=$(echo $restApiGetLabels | jq -r '.[] | select(.name | contains("ReviwerWorkflowId")) | .name');           
-               
-               if [ "$workflowIdExtracted" != "" ]; then
-                 echo 'workflowIdExtracted:' $workflowIdExtracted
-                 workflowId=$(echo $workflowIdExtracted| cut -d':' -f 2)
-                 echo 'workflowId:' $workflowId
-
-
-                 curl \
-                  -X POST \
-                  -H "Accept: application/vnd.github.v3+json" \
-                  -H "Authorization: token ${{ secrets.TOKEN_GITHUB }}" \
-                  https://api.github.com/repos/naregkar/devAutoMerge/actions/runs/$workflowId/rerun
-               else
-                echo 'no re-run'
-               fi
-
+      #- name: Trigger a re-run
+      #  if: github.event.pull_request.draft == false && steps.find.outputs.issue != '' && github.event.action != 'opened'
+      #  run:  |
+      #  
+      #         restApiGetLabels=$(curl \
+      #                          -H "Accept: application/vnd.github.v3+json" \
+      #                          -H "Authorization: token ${{ secrets.TOKEN_GITHUB }}" \
+      #                          https://api.github.com/repos/naregkar/devAutoMerge/issues/$GITHUB_PR_NUMBER/labels)
+      #                          
+      #         workflowIdExtracted=$(echo $restApiGetLabels | jq -r '.[] | select(.name | contains("ReviwerWorkflowId")) | .name');           
+      #         
+      #         if [ "$workflowIdExtracted" != "" ]; then
+      #           echo 'workflowIdExtracted:' $workflowIdExtracted
+      #           workflowId=$(echo $workflowIdExtracted| cut -d':' -f 2)
+      #           echo 'workflowId:' $workflowId
+      #
+      #          curl \
+      #             -X POST \
+      #            -H "Accept: application/vnd.github.v3+json" \
+      #           -H "Authorization: token ${{ secrets.TOKEN_GITHUB }}" \
+      #            https://api.github.com/repos/naregkar/devAutoMerge/actions/runs/$workflowId/rerun
+      #         else
+      #          echo 'no re-run'
+      #         fi
                              
   Transition-To-Other-States:
     runs-on: ubuntu-latest
