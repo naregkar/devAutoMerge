@@ -124,8 +124,16 @@ jobs:
                     #Change the Jira issue Status to QA Open
                     curl -D- -u ${{ secrets.JIRA_USER_EMAIL }}:${{ secrets.JIRA_API_TOKEN }} \
                       -X POST --data '{"transition":{"id":"61"}}' \
-                      -H "Content-Type: application/json" ${{ secrets.JIRA_BASE_URL }}/rest/api/3/issue/${{ steps.find.outputs.issue }}/transitions
-         
+                      -H "Content-Type: application/json" ${{ secrets.JIRA_BASE_URL }}/rest/api/3/issue/${{ steps.find.outputs.issue }}/transitions         
+                
+                    #Add label code-reviewed
+                    curl \
+                      -X POST \
+                      -H "Accept: application/vnd.github.v3+json" \
+                      -H 'authorization: token ${{ secrets.TOKEN_GITHUB }}' \
+                      -d '["Code-Reviewed"]' \
+                      https://api.github.com/repos/naregkar/devAutoMerge/issues/$GITHUB_PR_NUMBER/labels;
+                
                 fi
                 
                 
